@@ -90,6 +90,14 @@ public class Gimnasio {
     }
 
     @Override
+    public String toString() {
+        return "Gimnasio" +  nombre + '\'' +
+                ", nif='" + nif + '\'' +
+                ", direccion='" + direccion + '\'' +
+                ", ciudad='" + ciudad ;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -118,3 +126,4 @@ public class Gimnasio {
         this.entrenadores = entrenadores;
     }
 }
+

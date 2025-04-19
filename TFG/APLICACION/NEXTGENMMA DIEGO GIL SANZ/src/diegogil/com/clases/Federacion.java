@@ -67,6 +67,14 @@ public class Federacion {
     }
 
     @Override
+    public String toString() {
+        return "Federacion{" + nombre + '\'' +
+                ", arteMarcial='" + arteMarcial + '\'' +
+                ", numeroAsociacion=" + numeroAsociacion +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

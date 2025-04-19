@@ -25,6 +25,14 @@ public class Liga {
     @OneToMany(mappedBy = "liga")
     private List<Peleador> peleadores;
 
+    @Override
+    public String toString() {
+        return "Liga{" +
+                "nombre='" + nombre + '\'' +
+                ", ciudad='" + ciudad + '\'' +
+                ", participantes=" + participantes ;
+    }
+
     public int getIdLiga() {
         return idLiga;
     }

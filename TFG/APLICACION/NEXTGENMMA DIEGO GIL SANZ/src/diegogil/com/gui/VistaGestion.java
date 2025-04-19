@@ -33,12 +33,12 @@ public class VistaGestion extends JFrame{
      public  JButton gimnasioModificarBtn;
      public JButton gimnasioEliminarBtn;
      public JList gimnasioLista;
-        DefaultListModel<Gimnasio> dflmgimnasio;
+        public DefaultListModel<Gimnasio> dflmgimnasio;
      public JButton ligaInsertarBtn;
      public JButton ligaModificarBtn;
      public JButton ligaEliminarBtn;
      public JList ligaLista;
-        DefaultListModel<Liga> dflmliga;
+        public DefaultListModel<Liga> dflmliga;
      public JComboBox ligaFederacionCombo;
      public  JTextField ligaParticipantesTxt;
      public JTextField ligaCiudadTxt;
@@ -58,7 +58,7 @@ public class VistaGestion extends JFrame{
      public JButton federacionModificarBtn;
      public JButton federacionEliminarBtn;
      public JTextField federacionArteMarcialTxt;
-     JTextField federacionNumeroAsociacionTxt;
+     public JTextField federacionNumeroAsociacionTxt;
      public JTextField federacionNombreTxt;
      public JList federacionLista;
      public DefaultListModel<Federacion> dflmfederacion;

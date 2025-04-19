@@ -106,6 +106,14 @@ public class Peleador {
     }
 
     @Override
+    public String toString() {
+        return "Peleador" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", dni='" + dni + '\'' +
+                ", peso=" + peso ;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
