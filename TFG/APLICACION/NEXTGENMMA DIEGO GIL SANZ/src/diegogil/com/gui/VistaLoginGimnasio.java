@@ -6,7 +6,7 @@ public class VistaLoginGimnasio extends JFrame {
     public JPanel panel1;
     public JComboBox loginGimnasioCombo;
     public JButton loginGimnasioBtn;
-     JTextField loginGimnasioContraseñaTxt;
+     public JTextField loginGimnasioContraseñaTxt;
     public VistaLoginGimnasio() {
         setContentPane(panel1);
         setTitle("Login Gimnasio");

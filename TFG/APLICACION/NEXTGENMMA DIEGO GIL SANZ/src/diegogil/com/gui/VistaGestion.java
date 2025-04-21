@@ -79,6 +79,7 @@ public class VistaGestion extends JFrame{
      public JButton informesPeleadoresGimnasioBtn;
      public JComboBox comboBox1;
      public JComboBox comboBox2;
+     public byte[] postImagenSeleccionada;
 
      public VistaGestion() {
 
@@ -89,7 +90,7 @@ public class VistaGestion extends JFrame{
           this.setLocationRelativeTo(null);
           colocarDefault();
 
-          this.setVisible(true);
+          this.setVisible(false);
      }
      private void colocarDefault(){
           dflmpeleador = new DefaultListModel<>();

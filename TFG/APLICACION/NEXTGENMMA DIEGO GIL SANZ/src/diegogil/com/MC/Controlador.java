@@ -3,6 +3,7 @@ package diegogil.com.MC;
 import diegogil.com.clases.*;
 import diegogil.com.gui.*;
 
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
@@ -68,6 +69,14 @@ public class Controlador implements ActionListener, ListSelectionListener {
                     vistaGestion.setVisible(true);
             }
                 break;
+            case "login gimnasio":
+                if (modelo.verificarContrasenaGimnasio((Gimnasio) vistaLoginGimnasio.loginGimnasioCombo.getSelectedItem(), vistaLoginGimnasio.loginGimnasioContraseñaTxt.getText())){
+                    vistaLoginGimnasio.setVisible(false);
+                    vistaGimnasio.setVisible(true);
+                }
+
+                break;
+
             case "añadir peleador":
                 Peleador peleador = new Peleador();
                 peleador.setNombre(vistaGestion.peleadorNombreTxt.getText());
@@ -165,11 +174,27 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 modelo.modificarEntrenador(entrenadorModificar);
 
                 break;
+            case "adjuntar imagen":
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Imágenes", "jpg", "png", "jpeg"));
+                int result = fileChooser.showOpenDialog(vistaGestion);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    java.io.File file = fileChooser.getSelectedFile();
+                    try {
+                        // Leer la imagen como un array de bytes
+                        byte[] imageBytes = java.nio.file.Files.readAllBytes(file.toPath());
+                        vistaGestion.postImagenSeleccionada = imageBytes; // Guarda la imagen en un atributo temporal
+                        System.out.println("Imagen seleccionada: " + file.getName());
+                    } catch (java.io.IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                break;
             case "insertar post":
                 Post post = new Post();
                 post.setTitulo(vistaGestion.postTituloTxt.getText());
                 post.setMensaje(vistaGestion.postMensajeTxt.getText());
-
+                post.setFoto(vistaGestion.postImagenSeleccionada); // Asigna la imagen seleccionada
                 modelo.altaPost(post);
                 break;
             case "eliminar post":
@@ -200,6 +225,24 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 federacionModificar.setFechaFundacion(Date.valueOf(vistaGestion.federacionAñoFundacionTxt.getDate()));
                 modelo.modificarFederacion(federacionModificar);
                 break;
+                case "enviar":
+                    Peleador peleadorEnviar = new Peleador();
+
+                    peleadorEnviar.setNombre(vistaGimnasio.solicitudNombreTxt.getText());
+                    peleadorEnviar.setApellido(vistaGimnasio.solicitudApellidoTxt.getText());
+                    peleadorEnviar.setDni(vistaGimnasio.solicitudDniTxt.getText());
+                    peleadorEnviar.setPeso(Integer.parseInt(vistaGimnasio.solicitudPesoTxt.getText()));
+                    peleadorEnviar.setVictorias(Integer.parseInt(vistaGimnasio.solicitudVictoriasTxt.getText()));
+                    peleadorEnviar.setApodo(vistaGimnasio.solicitudApodoTxt.getText());
+                    peleadorEnviar.setFechaNacimiento(Date.valueOf(vistaGimnasio.solicitudNacimientoTxt.getDate()));
+                    peleadorEnviar.setGimnasio((Gimnasio) vistaGimnasio.solicitudGimnasioCombo.getSelectedItem());
+                    peleadorEnviar.setEntrenador((Entrenador) vistaGimnasio.solicitudEntrenadorCombo.getSelectedItem());
+                    peleadorEnviar.setLiga((Liga) vistaGimnasio.solicitudLigaCombo.getSelectedItem());
+
+
+                    modelo.enviarCorreo(peleadorEnviar, vistaGimnasio.solicitudAsuntoTxt.getText());
+                    break;
+
 
 
         }
@@ -274,6 +317,9 @@ public class Controlador implements ActionListener, ListSelectionListener {
         vistaGestion.informesPeleadoresGimnasioBtn.setActionCommand("informes peleadores gimnasio");
         vistaGestion.informesPeleadoresLigaBtn.addActionListener(listener);
         vistaGestion.informesPeleadoresLigaBtn.setActionCommand("informes peleadores liga");
+        vistaGestion.postAdjuntarImageBtn.addActionListener(listener);
+        vistaGestion.postAdjuntarImageBtn.setActionCommand("adjuntar imagen");
+
 
 
 

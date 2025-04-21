@@ -7,7 +7,16 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.util.ArrayList;
+import java.util.Properties;
 
 public class Modelo {
     private SessionFactory sessionFactory;
@@ -246,5 +255,75 @@ public class Modelo {
 
     public boolean verificarContrasena(String contrasena) {
         return "admin".equals(contrasena);
+    }
+    public boolean verificarContrasenaGimnasio(Gimnasio gimnasio, String contrasena) {
+        try (Session session = getSession()) {
+            session.beginTransaction();
+            // Recuperar el gimnasio desde la base de datos
+            Gimnasio gimnasioDB = session.get(Gimnasio.class, gimnasio.getIdGimnasio());
+            session.getTransaction().commit();
+
+            // Comprobar si el gimnasio existe
+            if (gimnasioDB != null) {
+                // Comparar contraseñas
+                if (gimnasioDB.getContraseña().equals(contrasena)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public void enviarCorreo(Peleador peleador, String asunto) {
+        String host = "smtp.gmail.com";
+        String puerto = "587";
+        String remitente = "diegogilzg@gmail.com"; // Cambia por tu correo
+        String contraseña = "zwze zpxd cglu ihci\n"; // Cambia por tu contraseña
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.port", puerto);
+
+        javax.mail.Session session = javax.mail.Session.getInstance(props, new javax.mail.Authenticator() {
+            @Override
+            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                return new javax.mail.PasswordAuthentication(remitente, contraseña);
+            }
+        });
+
+        try {
+            // Crear el contenido del mensaje con los datos del peleador
+            String contenido = "Datos del Peleador:\n" +
+                    "Nombre: " + peleador.getNombre() + "\n" +
+                    "Apellido: " + peleador.getApellido() + "\n" +
+                    "DNI: " + peleador.getDni() + "\n" +
+                    "Peso: " + peleador.getPeso() + "\n" +
+                    "Victorias: " + peleador.getVictorias() + "\n" +
+                    "Apodo: " + peleador.getApodo() + "\n" +
+                    "Fecha de Nacimiento: " + peleador.getFechaNacimiento() + "\n" +
+                    "Gimnasio: " + (peleador.getGimnasio() != null ? peleador.getGimnasio().getNombre() : "N/A") + "\n" +
+                    "Entrenador: " + (peleador.getEntrenador() != null ? peleador.getEntrenador().getNombre() + " " + peleador.getEntrenador().getApellido() : "N/A") + "\n" +
+                    "Liga: " + (peleador.getLiga() != null ? peleador.getLiga().getNombre() : "N/A");
+
+            // Crear el mensaje
+            Message mensaje = new MimeMessage(session);
+            mensaje.setFrom(new InternetAddress(remitente));
+            mensaje.setRecipients(Message.RecipientType.TO, InternetAddress.parse("diegogilzg@gmail.com")); // Cambia por el destinatario
+            mensaje.setSubject(asunto);
+            mensaje.setText(contenido);
+
+            // Enviar el mensaje
+            Transport.send(mensaje);
+            System.out.println("Correo enviado exitosamente.");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }
