@@ -6,16 +6,33 @@ public class VistaPost extends JFrame {
     public JPanel panel1;
     public JButton postBackBtn;
     public JButton postNextBtn;
-    public JTextArea textArea1;
+    public JTextArea postMensajeTxt;
+    public JLabel postTituloTxt;
+    public JLabel postImagenTxt;
+    JMenuBar menuBar1;
+    JMenu menu1;
+    public JMenuItem inicio5;
+
     public VistaPost() {
         setContentPane(panel1);
         setTitle("Post");
-        setSize(800, 600);
+        pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setVisible(true);
+        crearMenu();
+        this.setVisible(false);
 
 
+
+    }
+    private void crearMenu() {
+        menuBar1 = new JMenuBar();
+        menu1 = new JMenu("Menu");
+        inicio5 = new JMenuItem("Inicio");
+
+        menu1.add(inicio5);
+        menuBar1.add(menu1);
+        setJMenuBar(menuBar1);
 
     }
 }

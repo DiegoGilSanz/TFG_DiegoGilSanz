@@ -3,11 +3,15 @@ package diegogil.com.MC;
 import diegogil.com.clases.*;
 import diegogil.com.gui.*;
 
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -19,6 +23,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
     private VistaGimnasio vistaGimnasio;
     private VistaLoginGimnasio vistaLoginGimnasio;
     private VistaGestion vistaGestion;
+    int numeroPost = 1;
 
     public Controlador(Modelo modelo, VistaUsuarios vistaUsers, VistaPost vistaPost, VistaLoginAdmin vistaLoginAdmin, VistaGimnasio vistaGimnasio, VistaLoginGimnasio vistaLoginGimnasio, VistaGestion vistaGestion) {
         this.modelo = modelo;
@@ -33,6 +38,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
         addActionListeners(this);
 
         addListSelectionListener(this);
+        inicializarPost(modelo.getPosts());
     }
 
     public void iniciar() {
@@ -55,12 +61,14 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 vistaLoginAdmin.setVisible(true);
                 break;
             case "gimnasio":
+                System.out.println("hola");
                 vistaUsers.setVisible(false);
                 vistaLoginGimnasio.setVisible(true);
                 break;
             case "invitado":
                 vistaUsers.setVisible(false);
                 vistaPost.setVisible(true);
+                inicializarPost(modelo.getPosts());
                 break;
             case "login admin":
 
@@ -77,51 +85,59 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
                 break;
 
+
             case "añadir peleador":
-                Peleador peleador = new Peleador();
-                peleador.setNombre(vistaGestion.peleadorNombreTxt.getText());
-                peleador.setApellido(vistaGestion.peleadorApellidoTxt.getText());
-                peleador.setDni(vistaGestion.peleadorDniTxt.getText());
-                peleador.setPeso(Integer.parseInt(vistaGestion.peleadorPesoTxt.getText()));
-                peleador.setVictorias(Integer.parseInt(vistaGestion.peleadorVictoriasTxt.getText()));
-                peleador.setApodo(vistaGestion.peleadorApodoTxt.getText());
-                peleador.setFechaNacimiento(Date.valueOf(vistaGestion.peleadorNacimientoTxt.getDate()));
-                peleador.setGimnasio((Gimnasio) vistaGestion.peleadorGimnasioCombo.getSelectedItem());
-                peleador.setEntrenador((Entrenador) vistaGestion.peleadorEntrenadorCombo.getSelectedItem());
-                peleador.setLiga((Liga) vistaGestion.peleadorLigaCombo.getSelectedItem());
-                modelo.altaPeleador(peleador);
+                if(validarCamposPeleador()) {
+                    Peleador peleador = new Peleador();
+                    peleador.setNombre(vistaGestion.peleadorNombreTxt.getText());
+                    peleador.setApellido(vistaGestion.peleadorApellidoTxt.getText());
+                    peleador.setDni(vistaGestion.peleadorDniTxt.getText());
+                    peleador.setPeso(Integer.parseInt(vistaGestion.peleadorPesoTxt.getText()));
+                    peleador.setVictorias(Integer.parseInt(vistaGestion.peleadorVictoriasTxt.getText()));
+                    peleador.setApodo(vistaGestion.peleadorApodoTxt.getText());
+                    peleador.setFechaNacimiento(Date.valueOf(vistaGestion.peleadorNacimientoTxt.getDate()));
+                    peleador.setGimnasio((Gimnasio) vistaGestion.peleadorGimnasioCombo.getSelectedItem());
+                    peleador.setEntrenador((Entrenador) vistaGestion.peleadorEntrenadorCombo.getSelectedItem());
+                    peleador.setLiga((Liga) vistaGestion.peleadorLigaCombo.getSelectedItem());
+                    modelo.altaPeleador(peleador);
+                }
                 break;
             case "eliminar peleador":
                 modelo.eliminarPeleador((Peleador) vistaGestion.peleadorLista.getSelectedValue());
 
                 break;
             case "modificar peleador":
-                Peleador peleadorModificar = (Peleador) vistaGestion.peleadorLista.getSelectedValue();
-                peleadorModificar.setNombre(vistaGestion.peleadorNombreTxt.getText());
-                peleadorModificar.setApellido(vistaGestion.peleadorApellidoTxt.getText());
-                peleadorModificar.setDni(vistaGestion.peleadorDniTxt.getText());
-                peleadorModificar.setPeso(Integer.parseInt(vistaGestion.peleadorPesoTxt.getText()));
-                peleadorModificar.setVictorias(Integer.parseInt(vistaGestion.peleadorVictoriasTxt.getText()));
-                peleadorModificar.setApodo(vistaGestion.peleadorApodoTxt.getText());
-                peleadorModificar.setGimnasio((Gimnasio) vistaGestion.peleadorGimnasioCombo.getSelectedItem());
-                peleadorModificar.setEntrenador((Entrenador) vistaGestion.peleadorEntrenadorCombo.getSelectedItem());
-                peleadorModificar.setLiga((Liga) vistaGestion.peleadorLigaCombo.getSelectedItem());
-                modelo.modificarPeleador(peleadorModificar);
+                if(validarCamposPeleador()) {
+                    Peleador peleadorModificar = (Peleador) vistaGestion.peleadorLista.getSelectedValue();
+                    peleadorModificar.setNombre(vistaGestion.peleadorNombreTxt.getText());
+                    peleadorModificar.setApellido(vistaGestion.peleadorApellidoTxt.getText());
+                    peleadorModificar.setDni(vistaGestion.peleadorDniTxt.getText());
+                    peleadorModificar.setPeso(Integer.parseInt(vistaGestion.peleadorPesoTxt.getText()));
+                    peleadorModificar.setVictorias(Integer.parseInt(vistaGestion.peleadorVictoriasTxt.getText()));
+                    peleadorModificar.setApodo(vistaGestion.peleadorApodoTxt.getText());
+                    peleadorModificar.setGimnasio((Gimnasio) vistaGestion.peleadorGimnasioCombo.getSelectedItem());
+                    peleadorModificar.setEntrenador((Entrenador) vistaGestion.peleadorEntrenadorCombo.getSelectedItem());
+                    peleadorModificar.setLiga((Liga) vistaGestion.peleadorLigaCombo.getSelectedItem());
+                    modelo.modificarPeleador(peleadorModificar);
+                }
                 break;
             case "insertar gimnasio":
-                Gimnasio gimnasio = new Gimnasio();
-                gimnasio.setNombre(vistaGestion.gimnasioNombreTxt.getText());
-                gimnasio.setDireccion(vistaGestion.gimnasioDireccionTxt.getText());
-                gimnasio.setCiudad(vistaGestion.gimnasioCiudadTxt.getText());
-                gimnasio.setContraseña(vistaGestion.gimnasioContraseñaTxt.getText());
-                gimnasio.setNif(vistaGestion.gimnasioNifTxt.getText());
-                gimnasio.setWeb(vistaGestion.gimnasioWebTxt.getText());
-                modelo.altaGimnasio(gimnasio);
+                if(validarCamposGimnasio()) {
+                    Gimnasio gimnasio = new Gimnasio();
+                    gimnasio.setNombre(vistaGestion.gimnasioNombreTxt.getText());
+                    gimnasio.setDireccion(vistaGestion.gimnasioDireccionTxt.getText());
+                    gimnasio.setCiudad(vistaGestion.gimnasioCiudadTxt.getText());
+                    gimnasio.setContraseña(vistaGestion.gimnasioContraseñaTxt.getText());
+                    gimnasio.setNif(vistaGestion.gimnasioNifTxt.getText());
+                    gimnasio.setWeb(vistaGestion.gimnasioWebTxt.getText());
+                    modelo.altaGimnasio(gimnasio);
+                }
                 break;
             case "eliminar gimnasio":
                 modelo.eliminarGimnasio((Gimnasio) vistaGestion.gimnasioLista.getSelectedValue());
                 break;
             case "modificar gimnasio":
+                if(validarCamposGimnasio()) {
                 Gimnasio gimnasioModificar = (Gimnasio) vistaGestion.gimnasioLista.getSelectedValue();
                 gimnasioModificar.setNombre(vistaGestion.gimnasioNombreTxt.getText());
                 gimnasioModificar.setDireccion(vistaGestion.gimnasioDireccionTxt.getText());
@@ -130,27 +146,33 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 gimnasioModificar.setNif(vistaGestion.gimnasioNifTxt.getText());
                 gimnasioModificar.setWeb(vistaGestion.gimnasioWebTxt.getText());
                 modelo.modificarGimnasio(gimnasioModificar);
+                }
                 break;
             case "insertar liga":
-                Liga liga = new Liga();
-                liga.setNombre(vistaGestion.ligaNombreTxt.getText());
-                liga.setCiudad(vistaGestion.ligaCiudadTxt.getText());
-                liga.setParticipantes(Integer.parseInt(vistaGestion.ligaParticipantesTxt.getText()));
-                liga.setFederacion((Federacion) vistaGestion.ligaFederacionCombo.getSelectedItem());
-                modelo.altaLiga(liga);
+                if(validarCamposLiga()) {
+                    Liga liga = new Liga();
+                    liga.setNombre(vistaGestion.ligaNombreTxt.getText());
+                    liga.setCiudad(vistaGestion.ligaCiudadTxt.getText());
+                    liga.setParticipantes(Integer.parseInt(vistaGestion.ligaParticipantesTxt.getText()));
+                    liga.setFederacion((Federacion) vistaGestion.ligaFederacionCombo.getSelectedItem());
+                    modelo.altaLiga(liga);
+                }
                 break;
             case "eliminar liga":
                 modelo.eliminarLiga((Liga) vistaGestion.ligaLista.getSelectedValue());
                 break;
             case "modificar liga":
-                Liga ligaModificar = (Liga) vistaGestion.ligaLista.getSelectedValue();
-                ligaModificar.setNombre(vistaGestion.ligaNombreTxt.getText());
-                ligaModificar.setCiudad(vistaGestion.ligaCiudadTxt.getText());
-                ligaModificar.setParticipantes(Integer.parseInt(vistaGestion.ligaParticipantesTxt.getText()));
-                ligaModificar.setFederacion((Federacion) vistaGestion.ligaFederacionCombo.getSelectedItem());
-                modelo.modificarLiga(ligaModificar);
+                if(validarCamposLiga()) {
+                    Liga ligaModificar = (Liga) vistaGestion.ligaLista.getSelectedValue();
+                    ligaModificar.setNombre(vistaGestion.ligaNombreTxt.getText());
+                    ligaModificar.setCiudad(vistaGestion.ligaCiudadTxt.getText());
+                    ligaModificar.setParticipantes(Integer.parseInt(vistaGestion.ligaParticipantesTxt.getText()));
+                    ligaModificar.setFederacion((Federacion) vistaGestion.ligaFederacionCombo.getSelectedItem());
+                    modelo.modificarLiga(ligaModificar);
+                }
                 break;
             case "insertar entrenador":
+                if (validarCamposEntrenador()){
                 Entrenador entrenador = new Entrenador();
                 entrenador.setNombre(vistaGestion.entrenadorNombreTxt.getText());
                 entrenador.setApellido(vistaGestion.entrenadorApellidoTxt.getText());
@@ -159,11 +181,13 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 entrenador.setExperiencia(Integer.parseInt(vistaGestion.entrenadorExperienciaTxt.getText()));
                 entrenador.setGimnasio((Gimnasio) vistaGestion.entrenadorGimnasioCombo.getSelectedItem());
                 modelo.altaEntrenador(entrenador);
+                }
                 break;
             case "eliminar entrenador":
                 modelo.eliminarEntrenador((Entrenador) vistaGestion.entradorLista.getSelectedValue());
                 break;
             case "modificar entrenador":
+                if (validarCamposEntrenador()){
                 Entrenador entrenadorModificar = (Entrenador) vistaGestion.entradorLista.getSelectedValue();
                 entrenadorModificar.setNombre(vistaGestion.entrenadorNombreTxt.getText());
                 entrenadorModificar.setApellido(vistaGestion.entrenadorApellidoTxt.getText());
@@ -172,6 +196,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 entrenadorModificar.setExperiencia(Integer.parseInt(vistaGestion.entrenadorExperienciaTxt.getText()));
                 entrenadorModificar.setGimnasio((Gimnasio) vistaGestion.entrenadorGimnasioCombo.getSelectedItem());
                 modelo.modificarEntrenador(entrenadorModificar);
+                }
 
                 break;
             case "adjuntar imagen":
@@ -181,49 +206,68 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 if (result == JFileChooser.APPROVE_OPTION) {
                     java.io.File file = fileChooser.getSelectedFile();
                     try {
-                        // Leer la imagen como un array de bytes
-                        byte[] imageBytes = java.nio.file.Files.readAllBytes(file.toPath());
-                        vistaGestion.postImagenSeleccionada = imageBytes; // Guarda la imagen en un atributo temporal
-                        System.out.println("Imagen seleccionada: " + file.getName());
+
+                        BufferedImage imagenOriginal = javax.imageio.ImageIO.read(file);
+
+
+                        Image imagenRedimensionada = imagenOriginal.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+                        BufferedImage bufferedResizedImage = new BufferedImage(200, 200, BufferedImage.TYPE_INT_ARGB);
+                        Graphics2D g2d = bufferedResizedImage.createGraphics();
+                        g2d.drawImage(imagenRedimensionada, 0, 0, null);
+                        g2d.dispose();
+
+                        // Convertir la imagen redimensionada a un array de bytes
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        javax.imageio.ImageIO.write(bufferedResizedImage, "png", baos);
+                        vistaGestion.postImagenSeleccionada = baos.toByteArray(); // Guarda la imagen redimensionada
+                        System.out.println("Imagen seleccionada y redimensionada: " + file.getName());
                     } catch (java.io.IOException ex) {
                         ex.printStackTrace();
                     }
                 }
                 break;
             case "insertar post":
-                Post post = new Post();
-                post.setTitulo(vistaGestion.postTituloTxt.getText());
-                post.setMensaje(vistaGestion.postMensajeTxt.getText());
-                post.setFoto(vistaGestion.postImagenSeleccionada); // Asigna la imagen seleccionada
-                modelo.altaPost(post);
+                if (validarCamposPost()) {
+                    Post post = new Post();
+                    post.setTitulo(vistaGestion.postTituloTxt.getText());
+                    post.setMensaje(vistaGestion.postMensajeTxt.getText());
+                    post.setFoto(vistaGestion.postImagenSeleccionada); // Asigna la imagen seleccionada
+                    modelo.altaPost(post);
+                }
                 break;
             case "eliminar post":
                 modelo.eliminarPost((Post) vistaGestion.postLista.getSelectedValue());
                 break;
             case "modificar post":
-                Post postModificar = (Post) vistaGestion.postLista.getSelectedValue();
-                postModificar.setTitulo(vistaGestion.postTituloTxt.getText());
-                postModificar.setMensaje(vistaGestion.postMensajeTxt.getText());
-                modelo.modificarPost(postModificar);
+                if (validarCamposPost()) {
+                    Post postModificar = (Post) vistaGestion.postLista.getSelectedValue();
+                    postModificar.setTitulo(vistaGestion.postTituloTxt.getText());
+                    postModificar.setMensaje(vistaGestion.postMensajeTxt.getText());
+                    modelo.modificarPost(postModificar);
+                }
                 break;
             case "insertar federacion":
+                if (validarCamposFederacion()) {
                 Federacion federacion = new Federacion();
                 federacion.setNombre(vistaGestion.federacionNombreTxt.getText());
                 federacion.setNumeroAsociacion(Integer.parseInt(vistaGestion.federacionNumeroAsociacionTxt.getText()));
                 federacion.setArteMarcial(vistaGestion.federacionArteMarcialTxt.getText());
                 federacion.setFechaFundacion(Date.valueOf(vistaGestion.federacionAñoFundacionTxt.getDate()));
                 modelo.altaFederacion(federacion);
+                }
                 break;
             case "eliminar federacion":
                 modelo.eliminarFederacion((Federacion) vistaGestion.federacionLista.getSelectedValue());
                 break;
             case "modificar federacion":
+                if (validarCamposFederacion()) {
                 Federacion federacionModificar = (Federacion) vistaGestion.federacionLista.getSelectedValue();
                 federacionModificar.setNombre(vistaGestion.federacionNombreTxt.getText());
                 federacionModificar.setNumeroAsociacion(Integer.parseInt(vistaGestion.federacionNumeroAsociacionTxt.getText()));
                 federacionModificar.setArteMarcial(vistaGestion.federacionArteMarcialTxt.getText());
                 federacionModificar.setFechaFundacion(Date.valueOf(vistaGestion.federacionAñoFundacionTxt.getDate()));
                 modelo.modificarFederacion(federacionModificar);
+                }
                 break;
                 case "enviar":
                     Peleador peleadorEnviar = new Peleador();
@@ -242,6 +286,63 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
                     modelo.enviarCorreo(peleadorEnviar, vistaGimnasio.solicitudAsuntoTxt.getText());
                     break;
+                case "inicio":
+                    vistaGestion.setVisible(false);
+                    vistaUsers.setVisible(true);
+                    break;
+                case "volver":
+                    if (numeroPost == 0){
+                        numeroPost= modelo.getPosts().size()-1;
+                        vistaPost.postTituloTxt.setText(modelo.getPosts().get(numeroPost).getTitulo());
+                        vistaPost.postMensajeTxt.setText(modelo.getPosts().get(numeroPost).getMensaje());
+                        if (modelo.getPosts().get(numeroPost).getFoto() != null) {
+                            vistaPost.postImagenTxt.setIcon(new ImageIcon(modelo.getPosts().get(numeroPost).getFoto()));
+                        } else {
+                            vistaPost.postImagenTxt.setIcon(null);
+                        }
+
+                    }else {
+                        numeroPost--;
+                        vistaPost.postTituloTxt.setText(modelo.getPosts().get(numeroPost).getTitulo());
+                        vistaPost.postMensajeTxt.setText(modelo.getPosts().get(numeroPost).getMensaje());
+                        if (modelo.getPosts().get(numeroPost).getFoto() != null) {
+                            vistaPost.postImagenTxt.setIcon(new ImageIcon(modelo.getPosts().get(numeroPost).getFoto()));
+                        } else {
+                            vistaPost.postImagenTxt.setIcon(null);
+                        }
+                    }
+
+
+                    break;
+                case "siguiente":
+                    if (numeroPost == modelo.getPosts().size()-1){
+                        numeroPost=0;
+                        vistaPost.postTituloTxt.setText(modelo.getPosts().get(numeroPost).getTitulo());
+                        vistaPost.postMensajeTxt.setText(modelo.getPosts().get(numeroPost).getMensaje());
+                        if (modelo.getPosts().get(numeroPost).getFoto() != null) {
+                            vistaPost.postImagenTxt.setIcon(new ImageIcon(modelo.getPosts().get(numeroPost).getFoto()));
+                        } else {
+                            vistaPost.postImagenTxt.setIcon(null);
+                        }
+                    }else {
+                        numeroPost++;
+                        vistaPost.postTituloTxt.setText(modelo.getPosts().get(numeroPost).getTitulo());
+                        vistaPost.postMensajeTxt.setText(modelo.getPosts().get(numeroPost).getMensaje());
+                        if (modelo.getPosts().get(numeroPost).getFoto() != null) {
+                            vistaPost.postImagenTxt.setIcon(new ImageIcon(modelo.getPosts().get(numeroPost).getFoto()));
+                        } else {
+                            vistaPost.postImagenTxt.setIcon(null);
+                        }
+                    }
+                    break;
+                    case "informes peleadores":
+                        /*
+                        JasperPrint reporteLleno = modelo.generarPeleadores();
+                        JasperViewer viewer1 = new JasperViewer(reporteLleno);
+                        viewer1.setVisible(true);
+                        break;
+
+                         */
 
 
 
@@ -249,6 +350,88 @@ public class Controlador implements ActionListener, ListSelectionListener {
         actualizarCombos();
         actualizarListas();
 
+    }
+    private boolean validarCamposPeleador() {
+        if (vistaGestion.peleadorNombreTxt.getText().isEmpty() || vistaGestion.peleadorApellidoTxt.getText().isEmpty() ||
+                vistaGestion.peleadorDniTxt.getText().isEmpty() || vistaGestion.peleadorPesoTxt.getText().isEmpty() ||
+                vistaGestion.peleadorVictoriasTxt.getText().isEmpty() || vistaGestion.peleadorApodoTxt.getText().isEmpty() ||
+                vistaGestion.peleadorNacimientoTxt.getDate() == null || vistaGestion.peleadorGimnasioCombo.getSelectedItem() == null ||
+                vistaGestion.peleadorEntrenadorCombo.getSelectedItem() == null || vistaGestion.peleadorLigaCombo.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(vistaGestion, "Todos los campos del peleador son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        try {
+            Integer.parseInt(vistaGestion.peleadorPesoTxt.getText());
+            Integer.parseInt(vistaGestion.peleadorVictoriasTxt.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(vistaGestion, "Peso y victorias deben ser valores numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validarCamposEntrenador() {
+        if (vistaGestion.entrenadorNombreTxt.getText().isEmpty() || vistaGestion.entrenadorApellidoTxt.getText().isEmpty() ||
+                vistaGestion.entrenadorDniTxt.getText().isEmpty() || vistaGestion.entrenadorColegiadoTxt.getText().isEmpty() ||
+                vistaGestion.entrenadorExperienciaTxt.getText().isEmpty() || vistaGestion.entrenadorGimnasioCombo.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(vistaGestion, "Todos los campos del entrenador son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        try {
+            Integer.parseInt(vistaGestion.entrenadorColegiadoTxt.getText());
+            Integer.parseInt(vistaGestion.entrenadorExperienciaTxt.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(vistaGestion, "Número de colegiado y experiencia deben ser valores numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+    private boolean validarCamposLiga() {
+        if (vistaGestion.ligaNombreTxt.getText().isEmpty() || vistaGestion.ligaCiudadTxt.getText().isEmpty() ||
+                vistaGestion.ligaParticipantesTxt.getText().isEmpty() || vistaGestion.ligaFederacionCombo.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(vistaGestion, "Todos los campos de la liga son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        try {
+            Integer.parseInt(vistaGestion.ligaParticipantesTxt.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(vistaGestion, "El número de participantes debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validarCamposFederacion() {
+        if (vistaGestion.federacionNombreTxt.getText().isEmpty() || vistaGestion.federacionArteMarcialTxt.getText().isEmpty() ||
+                vistaGestion.federacionNumeroAsociacionTxt.getText().isEmpty() || vistaGestion.federacionAñoFundacionTxt.getDate() == null) {
+            JOptionPane.showMessageDialog(vistaGestion, "Todos los campos de la federación son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        try {
+            Integer.parseInt(vistaGestion.federacionNumeroAsociacionTxt.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(vistaGestion, "El número de asociación debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validarCamposGimnasio() {
+        if (vistaGestion.gimnasioNombreTxt.getText().isEmpty() || vistaGestion.gimnasioDireccionTxt.getText().isEmpty() ||
+                vistaGestion.gimnasioCiudadTxt.getText().isEmpty() || vistaGestion.gimnasioContraseñaTxt.getText().isEmpty() ||
+                vistaGestion.gimnasioNifTxt.getText().isEmpty() || vistaGestion.gimnasioWebTxt.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(vistaGestion, "Todos los campos del gimnasio son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validarCamposPost() {
+        if (vistaGestion.postTituloTxt.getText().isEmpty() || vistaGestion.postMensajeTxt.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(vistaGestion, "El título y el mensaje del post son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
     public void addActionListeners(ActionListener listener){
         vistaUsers.usuarioAdministradorBtn.addActionListener(listener);
@@ -319,6 +502,18 @@ public class Controlador implements ActionListener, ListSelectionListener {
         vistaGestion.informesPeleadoresLigaBtn.setActionCommand("informes peleadores liga");
         vistaGestion.postAdjuntarImageBtn.addActionListener(listener);
         vistaGestion.postAdjuntarImageBtn.setActionCommand("adjuntar imagen");
+        vistaGestion.inicio.addActionListener(listener);
+        vistaGestion.inicio.setActionCommand("inicio");
+        vistaGimnasio.inicio2.addActionListener(listener);
+        vistaGimnasio.inicio2.setActionCommand("inicio");
+        vistaLoginAdmin.inicio3.addActionListener(listener);
+        vistaLoginAdmin.inicio3.setActionCommand("inicio");
+        vistaLoginGimnasio.inicio4.addActionListener(listener);
+        vistaLoginGimnasio.inicio4.setActionCommand("inicio");
+        vistaPost.inicio5.addActionListener(listener);
+        vistaPost.inicio5.setActionCommand("inicio");
+
+
 
 
 
@@ -340,6 +535,9 @@ public class Controlador implements ActionListener, ListSelectionListener {
         comboPeleadorLiga();
         comboLigaFederacion();
         comboGimnasioLogin();
+        comboGimnasioGimnasio();
+        comboGimnasioEntrenador();
+        comboGimnasioLiga();
         
     }
     void comboPeleadorGimnasio(){
@@ -376,6 +574,24 @@ public class Controlador implements ActionListener, ListSelectionListener {
         vistaLoginGimnasio.loginGimnasioCombo.removeAllItems();
         for (Gimnasio gimnasio : modelo.getGimnasios()) {
             vistaLoginGimnasio.loginGimnasioCombo.addItem(gimnasio);
+        }
+    }
+    void  comboGimnasioGimnasio(){
+        vistaGimnasio.solicitudGimnasioCombo.removeAllItems();
+        for (Gimnasio gimnasio:modelo.getGimnasios()){
+            vistaGimnasio.solicitudGimnasioCombo.addItem(gimnasio);
+        }
+    }
+    void comboGimnasioEntrenador(){
+        vistaGimnasio.solicitudEntrenadorCombo.removeAllItems();
+        for (Entrenador entrenador:modelo.getEntrenadores()){
+            vistaGimnasio.solicitudEntrenadorCombo.addItem(entrenador);
+        }
+    }
+    void comboGimnasioLiga(){
+        vistaGimnasio.solicitudLigaCombo.removeAllItems();
+        for (Liga liga:modelo.getLigas()){
+            vistaGimnasio.solicitudLigaCombo.addItem(liga);
         }
     }
 
@@ -485,6 +701,16 @@ private void listarPosts(ArrayList<Post> posts) {
     for (Post post : posts) {
         vistaGestion.dflmpost.addElement(post);
     }
+}
+private void inicializarPost(ArrayList<Post> posts){
+        vistaPost.postTituloTxt.setText(posts.get(0).getTitulo());
+        vistaPost.postMensajeTxt.setText(posts.get(0).getMensaje());
+        if (posts.get(0).getFoto() != null) {
+            vistaPost.postImagenTxt.setIcon(new ImageIcon(posts.get(0).getFoto()));
+        } else {
+            vistaPost.postImagenTxt.setIcon(null);
+        }
+
 }
 
 }

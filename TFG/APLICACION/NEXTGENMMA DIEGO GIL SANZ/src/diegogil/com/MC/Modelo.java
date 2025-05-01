@@ -1,6 +1,7 @@
 package diegogil.com.MC;
 
 import diegogil.com.clases.*;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -15,11 +16,17 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Properties;
 
 public class Modelo {
     private SessionFactory sessionFactory;
+    public static final String JASPER_PELEADORES = "Peleadores.jasper";
+    static Connection conexion;
+
 
     public void conectar() {
         try {
@@ -39,6 +46,13 @@ public class Modelo {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Error initializing Hibernate SessionFactory.");
+        }
+    }
+    static void conectarJasper() {
+        try {
+            conexion = (com.mysql.jdbc.Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/nextgenmma", "root", "");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -283,7 +297,7 @@ public class Modelo {
         String host = "smtp.gmail.com";
         String puerto = "587";
         String remitente = "diegogilzg@gmail.com"; // Cambia por tu correo
-        String contraseña = "zwze zpxd cglu ihci\n"; // Cambia por tu contraseña
+        String contraseña = "ylqy gmxn svib vjbc\n\n"; // Cambia por tu contraseña
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -326,4 +340,6 @@ public class Modelo {
             e.printStackTrace();
         }
     }
+
+
 }

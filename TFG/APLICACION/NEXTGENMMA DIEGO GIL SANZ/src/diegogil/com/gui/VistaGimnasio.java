@@ -21,15 +21,30 @@ public class VistaGimnasio extends JFrame {
      public DatePicker solicitudNacimientoTxt;
      public JButton gimnasioInformeBtn;
      public JLabel solicitudPeleadoresActivosTxt;
+     JMenuBar menuBar1;
+     JMenu menu1;
+     public JMenuItem inicio2;
      public VistaGimnasio() {
           setContentPane(panel1);
           setTitle("Gimnasios");
           setSize(800, 600);
+          pack();
           setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
           setLocationRelativeTo(null);
-          setVisible(true);
+          this.setVisible(false);
+            crearMenu();
 
 
+
+     }
+     private void crearMenu() {
+          menuBar1 = new JMenuBar();
+          menu1 = new JMenu("Menu");
+          inicio2 = new JMenuItem("Inicio");
+
+          menu1.add(inicio2);
+          menuBar1.add(menu1);
+          setJMenuBar(menuBar1);
 
      }
 }

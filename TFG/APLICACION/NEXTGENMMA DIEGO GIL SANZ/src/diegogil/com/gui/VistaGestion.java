@@ -1,5 +1,6 @@
 package diegogil.com.gui;
 
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.github.lgooddatepicker.components.DatePicker;
 import diegogil.com.clases.*;
 
@@ -80,15 +81,25 @@ public class VistaGestion extends JFrame{
      public JComboBox comboBox1;
      public JComboBox comboBox2;
      public byte[] postImagenSeleccionada;
+     JMenuBar menuBar1;
+        JMenu menu1;
+     public JMenuItem inicio;
 
      public VistaGestion() {
 
           this.setContentPane(panel1);
           this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-          this.setSize(1000,1000);
+          pack();
+          crearMenu();
           this.setResizable(false);
           this.setLocationRelativeTo(null);
           colocarDefault();
+          try {
+               UIManager.setLookAndFeel(new FlatMacLightLaf());
+          } catch (UnsupportedLookAndFeelException e) {
+               throw new RuntimeException(e);
+          }
+          SwingUtilities.updateComponentTreeUI(this);
 
           this.setVisible(false);
      }
@@ -106,6 +117,16 @@ public class VistaGestion extends JFrame{
           dflmpost = new DefaultListModel<>();
           postLista.setModel(dflmpost);
 
+
+     }
+     private void crearMenu() {
+          menuBar1 = new JMenuBar();
+          menu1 = new JMenu("Menu");
+          inicio = new JMenuItem("Inicio");
+
+          menu1.add(inicio);
+          menuBar1.add(menu1);
+          setJMenuBar(menuBar1);
 
      }
 
