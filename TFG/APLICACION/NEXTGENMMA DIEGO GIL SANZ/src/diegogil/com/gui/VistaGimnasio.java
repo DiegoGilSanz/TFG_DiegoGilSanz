@@ -27,8 +27,10 @@ public class VistaGimnasio extends JFrame {
      public VistaGimnasio() {
           setContentPane(panel1);
           setTitle("Gimnasios");
-          setSize(800, 600);
+
           pack();
+          this.setResizable(false);
+
           setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
           setLocationRelativeTo(null);
           this.setVisible(false);

@@ -6,14 +6,14 @@ public class VistaLoginGimnasio extends JFrame {
     public JPanel panel1;
     public JComboBox loginGimnasioCombo;
     public JButton loginGimnasioBtn;
-     public JTextField loginGimnasioContraseñaTxt;
+     public JPasswordField loginGimnasioContraseñaTxt;
     JMenuBar menuBar1;
     JMenu menu1;
     public JMenuItem inicio4;
     public VistaLoginGimnasio() {
         setContentPane(panel1);
         setTitle("Login Gimnasio");
-        setSize(800, 600);
+        pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         crearMenu();

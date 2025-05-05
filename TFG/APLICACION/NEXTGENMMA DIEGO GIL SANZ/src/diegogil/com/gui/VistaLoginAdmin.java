@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class VistaLoginAdmin extends JFrame{
      public JPanel panel1;
-     public JTextField administradorContraseñaTxt;
+     public JPasswordField administradorContraseñaTxt;
      public JButton administradorLoginBtn;
      JMenuBar menuBar1;
      JMenu menu1;
@@ -13,7 +13,7 @@ public class VistaLoginAdmin extends JFrame{
      public VistaLoginAdmin() {
           setContentPane(panel1);
           setTitle("Login Administrador");
-          setSize(800, 600);
+          pack();
           setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
           setLocationRelativeTo(null);
           crearMenu();

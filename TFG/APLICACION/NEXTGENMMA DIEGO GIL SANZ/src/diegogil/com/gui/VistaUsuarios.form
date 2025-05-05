@@ -6,13 +6,13 @@
     <rowspec value="center:146px:noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
     <rowspec value="center:171px:noGrow"/>
-    <colspec value="fill:234px:noGrow"/>
+    <colspec value="fill:250px:noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:261px:noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:278px:noGrow"/>
     <constraints>
-      <xy x="20" y="20" width="789" height="486"/>
+      <xy x="20" y="20" width="805" height="486"/>
     </constraints>
     <properties/>
     <border type="none"/>

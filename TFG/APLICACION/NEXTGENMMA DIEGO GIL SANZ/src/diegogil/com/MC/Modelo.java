@@ -1,7 +1,9 @@
 package diegogil.com.MC;
 
 import diegogil.com.clases.*;
-
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
@@ -11,22 +13,31 @@ import org.hibernate.cfg.Configuration;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 public class Modelo {
     private SessionFactory sessionFactory;
-    public static final String JASPER_PELEADORES = "Peleadores.jasper";
-    static Connection conexion;
+    public static final String JASPER_PELEADORES = "src/jaspers/peleadores.jasper";
+    public static final String JASPER_ENTRENADORES = "src/jaspers/entrenadores.jasper";
+    public static final String JASPER_GIMNASIOS = "src/jaspers/gimnasios.jasper";
+    public static final String JASPER_LIGAS = "src/jaspers/ligas.jasper";
+    public static final String JASPER_PELEADORESLIGA = "src/jaspers/Peleadores_Liga.jasper";
+    public static final String JASPER_PELEADORESGIMNASIO = "src/jaspers/Peleadores_Gimnasio.jasper";
 
+    private static Connection conexion;
+
+    public Modelo() {
+        conectar();
+
+
+    }
 
     public void conectar() {
         try {
@@ -48,9 +59,10 @@ public class Modelo {
             System.err.println("Error initializing Hibernate SessionFactory.");
         }
     }
-    static void conectarJasper() {
+
+    private static Connection conectarJasper() {
         try {
-            conexion = (com.mysql.jdbc.Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/nextgenmma", "root", "");
+            return DriverManager.getConnection("jdbc:mysql://localhost:3306/nextgenmma", "root", "");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -59,6 +71,14 @@ public class Modelo {
     public void desconectar() {
         if (sessionFactory != null && sessionFactory.isOpen()) {
             sessionFactory.close();
+        }
+
+        if (conexion != null) {
+            try {
+                conexion.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -270,6 +290,7 @@ public class Modelo {
     public boolean verificarContrasena(String contrasena) {
         return "admin".equals(contrasena);
     }
+
     public boolean verificarContrasenaGimnasio(Gimnasio gimnasio, String contrasena) {
         try (Session session = getSession()) {
             session.beginTransaction();
@@ -280,11 +301,7 @@ public class Modelo {
             // Comprobar si el gimnasio existe
             if (gimnasioDB != null) {
                 // Comparar contraseñas
-                if (gimnasioDB.getContraseña().equals(contrasena)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return gimnasioDB.getContraseña().equals(contrasena);
             } else {
                 return false;
             }
@@ -293,11 +310,12 @@ public class Modelo {
             return false;
         }
     }
+
     public void enviarCorreo(Peleador peleador, String asunto) {
         String host = "smtp.gmail.com";
         String puerto = "587";
         String remitente = "diegogilzg@gmail.com"; // Cambia por tu correo
-        String contraseña = "ylqy gmxn svib vjbc\n\n"; // Cambia por tu contraseña
+        String contraseña = "ylqy gmxn svib vjbc"; // Cambia por tu contraseña
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -338,6 +356,71 @@ public class Modelo {
             System.out.println("Correo enviado exitosamente.");
         } catch (MessagingException e) {
             e.printStackTrace();
+        }
+    }
+
+    public JasperPrint generarPeleadores() {
+        try {
+            conexion = conectarJasper();
+            return JasperFillManager.fillReport(JASPER_PELEADORES, null, conexion);
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public JasperPrint generarEntrenadores() {
+        try {
+            conexion = conectarJasper();
+            return JasperFillManager.fillReport(JASPER_ENTRENADORES, null, conexion);
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public JasperPrint generarGimnasios() {
+        try {
+            conexion = conectarJasper();
+            return JasperFillManager.fillReport(JASPER_GIMNASIOS, null, conexion);
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public JasperPrint generarLigas() {
+        try {
+            conexion = conectarJasper();
+            return JasperFillManager.fillReport(JASPER_LIGAS, null, conexion);
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static JasperPrint generarPeleadoresLiga(Liga liga){
+
+        try {
+            conexion = conectarJasper();
+            HashMap<String,Object> parametros=new HashMap<String,Object>();
+            parametros.put("idLiga", liga.getIdLiga());
+           return JasperFillManager.fillReport(JASPER_PELEADORESLIGA, parametros, conexion);
+
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static JasperPrint generarPeleadoresGimnasio(Gimnasio gimnasio){
+
+        try {
+            conexion = conectarJasper();
+            HashMap<String,Object> parametros=new HashMap<String,Object>();
+            parametros.put("idGimnasio", gimnasio.getIdGimnasio());
+            return JasperFillManager.fillReport(JASPER_PELEADORESGIMNASIO, parametros, conexion);
+
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public int peleadoresActivos(Gimnasio gimnasio) {
+        try (Session session = getSession()) {
+            Long count = (Long) session.createQuery("SELECT COUNT(p) FROM Peleador p WHERE p.gimnasio.idGimnasio = :idGimnasio")
+                    .setParameter("idGimnasio", gimnasio.getIdGimnasio())
+                    .uniqueResult();
+            return count != null ? count.intValue() : 0;
         }
     }
 

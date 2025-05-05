@@ -28,7 +28,7 @@ public class VistaGestion extends JFrame{
      public  JTextField gimnasioDireccionTxt;
      public  JTextField gimnasioNifTxt;
      public  JTextField gimnasioCiudadTxt;
-     public  JTextField gimnasioContraseñaTxt;
+     public JPasswordField gimnasioContraseñaTxt;
      public  JTextField gimnasioWebTxt;
      public  JButton gimnasioInsertarBtn;
      public  JButton gimnasioModificarBtn;
@@ -78,8 +78,8 @@ public class VistaGestion extends JFrame{
      public  JButton informesLigasBtn;
      public  JButton informesPeleadoresLigaBtn;
      public JButton informesPeleadoresGimnasioBtn;
-     public JComboBox comboBox1;
-     public JComboBox comboBox2;
+     public JComboBox InformesComboLiga;
+     public JComboBox InformesComboGimnasio;
      public byte[] postImagenSeleccionada;
      JMenuBar menuBar1;
         JMenu menu1;

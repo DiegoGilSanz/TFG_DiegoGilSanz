@@ -2,6 +2,9 @@ package diegogil.com.MC;
 
 import diegogil.com.clases.*;
 import diegogil.com.gui.*;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
+import org.apache.commons.codec.digest.DigestUtils;
 
 
 import javax.swing.*;
@@ -27,7 +30,6 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
     public Controlador(Modelo modelo, VistaUsuarios vistaUsers, VistaPost vistaPost, VistaLoginAdmin vistaLoginAdmin, VistaGimnasio vistaGimnasio, VistaLoginGimnasio vistaLoginGimnasio, VistaGestion vistaGestion) {
         this.modelo = modelo;
-        modelo.conectar();
         this.vistaUsers = vistaUsers;
         this.vistaPost = vistaPost;
         this.vistaLoginAdmin = vistaLoginAdmin;
@@ -74,13 +76,18 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
                 if (modelo.verificarContrasena(vistaLoginAdmin.administradorContraseñaTxt.getText())){
                     vistaLoginAdmin.setVisible(false);
+                    vistaGestion.pack();
                     vistaGestion.setVisible(true);
+
             }
                 break;
             case "login gimnasio":
-                if (modelo.verificarContrasenaGimnasio((Gimnasio) vistaLoginGimnasio.loginGimnasioCombo.getSelectedItem(), vistaLoginGimnasio.loginGimnasioContraseñaTxt.getText())){
+                String hashGimnasioContraseñaLogin;
+                hashGimnasioContraseñaLogin = DigestUtils.sha256Hex(vistaLoginGimnasio.loginGimnasioContraseñaTxt.getText());
+                if (modelo.verificarContrasenaGimnasio((Gimnasio) vistaLoginGimnasio.loginGimnasioCombo.getSelectedItem(),hashGimnasioContraseñaLogin)){
                     vistaLoginGimnasio.setVisible(false);
                     vistaGimnasio.setVisible(true);
+                    vistaGimnasio.solicitudPeleadoresActivosTxt.setText(String.valueOf(modelo.peleadoresActivos((Gimnasio) vistaLoginGimnasio.loginGimnasioCombo.getSelectedItem())));
                 }
 
                 break;
@@ -122,12 +129,14 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 }
                 break;
             case "insertar gimnasio":
+                String hashGimnasioContraseña;
                 if(validarCamposGimnasio()) {
                     Gimnasio gimnasio = new Gimnasio();
                     gimnasio.setNombre(vistaGestion.gimnasioNombreTxt.getText());
                     gimnasio.setDireccion(vistaGestion.gimnasioDireccionTxt.getText());
                     gimnasio.setCiudad(vistaGestion.gimnasioCiudadTxt.getText());
-                    gimnasio.setContraseña(vistaGestion.gimnasioContraseñaTxt.getText());
+                    hashGimnasioContraseña = DigestUtils.sha256Hex(vistaGestion.gimnasioContraseñaTxt.getText());
+                    gimnasio.setContraseña(hashGimnasioContraseña);
                     gimnasio.setNif(vistaGestion.gimnasioNifTxt.getText());
                     gimnasio.setWeb(vistaGestion.gimnasioWebTxt.getText());
                     modelo.altaGimnasio(gimnasio);
@@ -137,12 +146,14 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 modelo.eliminarGimnasio((Gimnasio) vistaGestion.gimnasioLista.getSelectedValue());
                 break;
             case "modificar gimnasio":
+                String hash;
                 if(validarCamposGimnasio()) {
                 Gimnasio gimnasioModificar = (Gimnasio) vistaGestion.gimnasioLista.getSelectedValue();
                 gimnasioModificar.setNombre(vistaGestion.gimnasioNombreTxt.getText());
                 gimnasioModificar.setDireccion(vistaGestion.gimnasioDireccionTxt.getText());
                 gimnasioModificar.setCiudad(vistaGestion.gimnasioCiudadTxt.getText());
-                gimnasioModificar.setContraseña(vistaGestion.gimnasioContraseñaTxt.getText());
+                hash= DigestUtils.sha256Hex(vistaGestion.gimnasioContraseñaTxt.getText());
+                gimnasioModificar.setContraseña(hash);
                 gimnasioModificar.setNif(vistaGestion.gimnasioNifTxt.getText());
                 gimnasioModificar.setWeb(vistaGestion.gimnasioWebTxt.getText());
                 modelo.modificarGimnasio(gimnasioModificar);
@@ -289,6 +300,11 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 case "inicio":
                     vistaGestion.setVisible(false);
                     vistaUsers.setVisible(true);
+                    vistaPost.setVisible(false);
+                    vistaLoginAdmin.setVisible(false);
+                    vistaGimnasio.setVisible(false);
+                    vistaLoginGimnasio.setVisible(false);
+
                     break;
                 case "volver":
                     if (numeroPost == 0){
@@ -336,13 +352,39 @@ public class Controlador implements ActionListener, ListSelectionListener {
                     }
                     break;
                     case "informes peleadores":
-                        /*
+
                         JasperPrint reporteLleno = modelo.generarPeleadores();
                         JasperViewer viewer1 = new JasperViewer(reporteLleno);
                         viewer1.setVisible(true);
                         break;
+                    case "informes gimnasios":
+                        JasperPrint reporteLleno2 = modelo.generarGimnasios();
+                        JasperViewer viewer2 = new JasperViewer(reporteLleno2);
+                        viewer2.setVisible(true);
+                        break;
+                    case "informes ligas":
+                        JasperPrint reporteLleno3 = modelo.generarLigas();
+                        JasperViewer viewer3 = new JasperViewer(reporteLleno3);
+                        viewer3.setVisible(true);
+                        break;
+                    case "informes entrenadores":
+                        JasperPrint reporteLleno4 = modelo.generarEntrenadores();
+                        JasperViewer viewer4 = new JasperViewer(reporteLleno4);
+                        viewer4.setVisible(true);
+                        break;
+                    case "informes peleadores liga":
+                        JasperPrint reporteLleno5 = modelo.generarPeleadoresLiga((Liga) vistaGestion.InformesComboLiga.getSelectedItem());
+                        JasperViewer viewer5 = new JasperViewer(reporteLleno5);
+                        viewer5.setVisible(true);
+                        break;
+                    case "informe Gimnasio":
+                        System.out.println("holaa");
+                        JasperPrint reporteLleno6 = modelo.generarPeleadoresGimnasio((Gimnasio) vistaGestion.InformesComboGimnasio.getSelectedItem());
+                        JasperViewer viewer6 = new JasperViewer(reporteLleno6);
+                        viewer6.setVisible(true);
+                        break;
 
-                         */
+
 
 
 
@@ -538,6 +580,8 @@ public class Controlador implements ActionListener, ListSelectionListener {
         comboGimnasioGimnasio();
         comboGimnasioEntrenador();
         comboGimnasioLiga();
+        comboInformesLiga();
+        comboInformesGimnasio();
         
     }
     void comboPeleadorGimnasio(){
@@ -592,6 +636,18 @@ public class Controlador implements ActionListener, ListSelectionListener {
         vistaGimnasio.solicitudLigaCombo.removeAllItems();
         for (Liga liga:modelo.getLigas()){
             vistaGimnasio.solicitudLigaCombo.addItem(liga);
+        }
+    }
+    void comboInformesLiga(){
+        vistaGestion.InformesComboLiga.removeAllItems();
+        for (Liga liga:modelo.getLigas()){
+            vistaGestion.InformesComboLiga.addItem(liga);
+        }
+    }
+    void comboInformesGimnasio(){
+        vistaGestion.InformesComboGimnasio.removeAllItems();
+        for (Gimnasio gimnasio:modelo.getGimnasios()){
+            vistaGestion.InformesComboGimnasio.addItem(gimnasio);
         }
     }
 
