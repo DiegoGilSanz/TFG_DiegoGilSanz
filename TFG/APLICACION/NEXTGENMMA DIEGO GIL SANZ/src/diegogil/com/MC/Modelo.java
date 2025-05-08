@@ -12,6 +12,7 @@ import org.hibernate.cfg.Configuration;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -143,7 +144,7 @@ public class Modelo {
             sessionFactory = config.buildSessionFactory(ssr);
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error initializing Hibernate SessionFactory.");
+            System.err.println("Error inicializando Hibernate SessionFactory.");
         }
     }
 
@@ -171,7 +172,7 @@ public class Modelo {
 
     private Session getSession() {
         if (sessionFactory == null) {
-            throw new IllegalStateException("SessionFactory is not initialized. Call conectar() first.");
+            throw new IllegalStateException("SessionFactory no inicializado");
         }
         return sessionFactory.openSession();
     }
@@ -401,8 +402,8 @@ public class Modelo {
     public void enviarCorreo(Peleador peleador, String asunto) {
         String host = "smtp.gmail.com";
         String puerto = "587";
-        String remitente = "diegogilzg@gmail.com"; // Cambia por tu correo
-        String contraseña = "ylqy gmxn svib vjbc"; // Cambia por tu contraseña
+        String remitente = "diegogilzg@gmail.com";
+        String contraseña = "ylqy gmxn svib vjbc";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -413,30 +414,64 @@ public class Modelo {
         javax.mail.Session session = javax.mail.Session.getInstance(props, new javax.mail.Authenticator() {
             @Override
             protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication(remitente, contraseña);
+                return new PasswordAuthentication(remitente, contraseña);
             }
         });
 
         try {
-            // Crear el contenido del mensaje con los datos del peleador
-            String contenido = "Datos del Peleador:\n" +
-                    "Nombre: " + peleador.getNombre() + "\n" +
-                    "Apellido: " + peleador.getApellido() + "\n" +
-                    "DNI: " + peleador.getDni() + "\n" +
-                    "Peso: " + peleador.getPeso() + "\n" +
-                    "Victorias: " + peleador.getVictorias() + "\n" +
-                    "Apodo: " + peleador.getApodo() + "\n" +
-                    "Fecha de Nacimiento: " + peleador.getFechaNacimiento() + "\n" +
-                    "Gimnasio: " + (peleador.getGimnasio() != null ? peleador.getGimnasio().getNombre() : "N/A") + "\n" +
-                    "Entrenador: " + (peleador.getEntrenador() != null ? peleador.getEntrenador().getNombre() + " " + peleador.getEntrenador().getApellido() : "N/A") + "\n" +
-                    "Liga: " + (peleador.getLiga() != null ? peleador.getLiga().getNombre() : "N/A");
+            // Crear el contenido HTML del mensaje
+            String contenido = "<!DOCTYPE html>" +
+                    "<html>" +
+                    "<head>" +
+                    "<style>" +
+                    "body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }" +
+                    ".header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }" +
+                    ".content { background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-radius: 0 0 5px 5px; }" +
+                    ".section { margin-bottom: 20px; padding: 15px; background-color: white; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }" +
+                    ".section-title { color: #2c3e50; font-size: 18px; font-weight: bold; margin-bottom: 10px; border-bottom: 2px solid #3498db; padding-bottom: 5px; }" +
+                    ".info-row { display: flex; margin-bottom: 8px; }" +
+                    ".label { font-weight: bold; width: 150px; color: #7f8c8d; }" +
+                    ".value { flex: 1; }" +
+                    ".footer { text-align: center; margin-top: 20px; padding: 10px; color: #7f8c8d; font-size: 12px; }" +
+                    "</style>" +
+                    "</head>" +
+                    "<body>" +
+                    "<div class='header'>" +
+                    "<h1>Información del Peleador</h1>" +
+                    "</div>" +
+                    "<div class='content'>" +
+                    "<div class='section'>" +
+                    "<div class='section-title'>Datos Personales</div>" +
+                    "<div class='info-row'><span class='label'>Nombre:</span><span class='value'>" + peleador.getNombre() + "</span></div>" +
+                    "<div class='info-row'><span class='label'>Apellido:</span><span class='value'>" + peleador.getApellido() + "</span></div>" +
+                    "<div class='info-row'><span class='label'>Apodo:</span><span class='value'>" + peleador.getApodo() + "</span></div>" +
+                    "<div class='info-row'><span class='label'>DNI:</span><span class='value'>" + peleador.getDni() + "</span></div>" +
+                    "<div class='info-row'><span class='label'>Fecha de Nacimiento:</span><span class='value'>" + peleador.getFechaNacimiento() + "</span></div>" +
+                    "</div>" +
+                    "<div class='section'>" +
+                    "<div class='section-title'>Información Deportiva</div>" +
+                    "<div class='info-row'><span class='label'>Peso:</span><span class='value'>" + peleador.getPeso() + " kg</span></div>" +
+                    "<div class='info-row'><span class='label'>Victorias:</span><span class='value'>" + peleador.getVictorias() + "</span></div>" +
+                    "<div class='info-row'><span class='label'>Liga:</span><span class='value'>" + (peleador.getLiga() != null ? peleador.getLiga().getNombre() : "N/A") + "</span></div>" +
+                    "</div>" +
+                    "<div class='section'>" +
+                    "<div class='section-title'>Equipo y Entrenamiento</div>" +
+                    "<div class='info-row'><span class='label'>Gimnasio:</span><span class='value'>" + (peleador.getGimnasio() != null ? peleador.getGimnasio().getNombre() : "N/A") + "</span></div>" +
+                    "<div class='info-row'><span class='label'>Entrenador:</span><span class='value'>" + (peleador.getEntrenador() != null ? peleador.getEntrenador().getNombre() + " " + peleador.getEntrenador().getApellido() : "N/A") + "</span></div>" +
+                    "</div>" +
+                    "</div>" +
+                    "<div class='footer'>" +
+                    "<p>Este es un correo automático. Por favor, no responda a este mensaje.</p>" +
+                    "</div>" +
+                    "</body>" +
+                    "</html>";
 
             // Crear el mensaje
             Message mensaje = new MimeMessage(session);
             mensaje.setFrom(new InternetAddress(remitente));
-            mensaje.setRecipients(Message.RecipientType.TO, InternetAddress.parse("diegogilzg@gmail.com")); // Cambia por el destinatario
+            mensaje.setRecipients(Message.RecipientType.TO, InternetAddress.parse("diegogilzg@gmail.com"));
             mensaje.setSubject(asunto);
-            mensaje.setText(contenido);
+            mensaje.setContent(contenido, "text/html; charset=utf-8");
 
             // Enviar el mensaje
             Transport.send(mensaje);

@@ -113,7 +113,12 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 break;
             case "eliminar peleador":
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres eliminar este peleador?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    modelo.eliminarPeleador((Peleador) vistaGestion.peleadorLista.getSelectedValue());
+                    try {
+                        modelo.eliminarPeleador((Peleador) vistaGestion.peleadorLista.getSelectedValue());
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(vistaGestion, "No se puede eliminar el peleador porque tiene peleas asociadas o no existen peleadores.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
                 }
                 break;
             case "modificar peleador":
@@ -151,7 +156,13 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 break;
             case "eliminar gimnasio":
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres eliminar este gimnasio?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    modelo.eliminarGimnasio((Gimnasio) vistaGestion.gimnasioLista.getSelectedValue());
+                    try {
+                        modelo.eliminarGimnasio((Gimnasio) vistaGestion.gimnasioLista.getSelectedValue());
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(vistaGestion, "No se puede eliminar el gimnasio porque tiene peleadores asociados o no existen gimnasios.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+
                 }
                 break;
             case "modificar gimnasio":
@@ -185,7 +196,13 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 break;
             case "eliminar liga":
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres eliminar esta liga?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                modelo.eliminarLiga((Liga) vistaGestion.ligaLista.getSelectedValue());
+                try {
+                    modelo.eliminarLiga((Liga) vistaGestion.ligaLista.getSelectedValue());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(vistaGestion, "No se puede eliminar la liga porque tiene peleadores asociados o no existen ligas.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+
                 }
                 break;
             case "modificar liga":
@@ -216,7 +233,11 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 break;
             case "eliminar entrenador":
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres eliminar este entrenador?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                modelo.eliminarEntrenador((Entrenador) vistaGestion.entradorLista.getSelectedValue());
+                try {
+                    modelo.eliminarEntrenador((Entrenador) vistaGestion.entradorLista.getSelectedValue());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(vistaGestion, "No se puede eliminar el entrenador porque tiene peleadores asociados o no existen entrenadores.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 }
                 break;
             case "modificar entrenador":
@@ -258,7 +279,8 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         vistaGestion.postImagenSeleccionada = baos.toByteArray(); // Guarda la imagen redimensionada
                         System.out.println("Imagen seleccionada y redimensionada: " + file.getName());
                     } catch (java.io.IOException ex) {
-                        ex.printStackTrace();
+
+                        JOptionPane.showMessageDialog(vistaGestion, "Error al cargar la imagen: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 break;
@@ -274,8 +296,14 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 }
                 break;
             case "eliminar post":
+
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres eliminar este post?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                modelo.eliminarPost((Post) vistaGestion.postLista.getSelectedValue());
+                try {
+                    modelo.eliminarPost((Post) vistaGestion.postLista.getSelectedValue());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(vistaGestion, "No se puede eliminar el post porque no existe o no tiene federaciones asociadas.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
                 }
                 break;
             case "modificar post":
@@ -301,8 +329,15 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 }
                 break;
             case "eliminar federacion":
+
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres eliminar esta federación?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                modelo.eliminarFederacion((Federacion) vistaGestion.federacionLista.getSelectedValue());
+                try {
+
+                    modelo.eliminarFederacion((Federacion) vistaGestion.federacionLista.getSelectedValue());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(vistaGestion, "No se puede eliminar la federación porque tiene ligas asociadas o no existen federaciones.", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
                 }
                 break;
             case "modificar federacion":
