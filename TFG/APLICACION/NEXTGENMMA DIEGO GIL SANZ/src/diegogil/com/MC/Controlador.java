@@ -547,7 +547,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
         vistaGestion.gimnasioEliminarBtn.setActionCommand("eliminar gimnasio");
         vistaGestion.ligaInsertarBtn.addActionListener(listener);
         vistaGestion.ligaInsertarBtn.setActionCommand("insertar liga");
-           vistaGestion.ligaModificarBtn.addActionListener(listener);
+        vistaGestion.ligaModificarBtn.addActionListener(listener);
         vistaGestion.ligaModificarBtn.setActionCommand("modificar liga");
         vistaGestion.ligaEliminarBtn.addActionListener(listener);
         vistaGestion.ligaEliminarBtn.setActionCommand("eliminar liga");
@@ -593,11 +593,6 @@ public class Controlador implements ActionListener, ListSelectionListener {
         vistaLoginGimnasio.inicio4.setActionCommand("inicio");
         vistaPost.inicio5.addActionListener(listener);
         vistaPost.inicio5.setActionCommand("inicio");
-
-
-
-
-
 
     }
     void addListSelectionListener(ListSelectionListener listener){
@@ -798,11 +793,19 @@ private void listarPosts(ArrayList<Post> posts) {
     }
 }
 private void inicializarPost(ArrayList<Post> posts){
+        try {
+
+
         vistaPost.postTituloTxt.setText(posts.get(0).getTitulo());
         vistaPost.postMensajeTxt.setText(posts.get(0).getMensaje());
         if (posts.get(0).getFoto() != null) {
             vistaPost.postImagenTxt.setIcon(new ImageIcon(posts.get(0).getFoto()));
         } else {
+            vistaPost.postImagenTxt.setIcon(null);
+        }
+        } catch (IndexOutOfBoundsException e) {
+            vistaPost.postTituloTxt.setText("");
+            vistaPost.postMensajeTxt.setText("");
             vistaPost.postImagenTxt.setIcon(null);
         }
 

@@ -14,10 +14,12 @@
       <mapping class="diegogil.com.clases.Liga"/>
       <mapping class="diegogil.com.clases.Peleador"/>
       <mapping class="diegogil.com.clases.Post"/>
+
       <!-- <property name="connection.username"/> -->
     <!-- <property name="connection.password"/> -->
 
     <!-- DB schema will be updated if needed -->
+
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
   </session-factory>
 </hibernate-configuration>

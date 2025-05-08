@@ -15,8 +15,13 @@ import javax.mail.MessagingException;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,12 +37,94 @@ public class Modelo {
     public static final String JASPER_PELEADORESGIMNASIO = "src/jaspers/Peleadores_Gimnasio.jasper";
 
     private static Connection conexion;
+    private static Connection connection;
+
+    private static String ip="localhost";
+    private static String port="3306";
+    private static String name="nextgenmma";
+    private static String user="root";
+    private static String password="";
+    private static String sqlRoute="src/SQLSCRIPT/ScriptTFGMMA_JAVA.sql";
+    private static String sgbd="mysql";
 
     public Modelo() {
+
+
         conectar();
 
 
     }
+
+
+    public static Connection connect() {
+        try {
+            if (connection == null || connection.isClosed()) {
+
+                try {
+                    connection = DriverManager.getConnection("jdbc:" + sgbd + "://" + ip + ":" + port + "/" + name + "?useSSL=false&allowPublicKeyRetrieval=true", user, password);
+                } catch (SQLException e) {
+                    createDatabase();
+                    try {
+                        connection = DriverManager.getConnection("jdbc:" + sgbd + "://" + ip + ":" + port + "/" + name + "?useSSL=false&allowPublicKeyRetrieval=true", user, password);
+                    } catch (SQLException ex) {
+                        JOptionPane.showConfirmDialog(null, "Error al conectar a la base de datos. Asegúrate de que el servidor esté en ejecución y la configuración sea correcta.", "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Conectado a la base de datos: " + name + " en " + ip + ":" + port + " como " + user + " con contraseña: " + password);
+        return connection;
+    }
+
+
+    private static void createDatabase() {
+        try {
+            connection = DriverManager.getConnection("jdbc:" + sgbd + "://" + ip + ":" + port + "/?useSSL=false&allowPublicKeyRetrieval=true", user, password);
+            String code = leerFichero(sqlRoute);
+            String[] queries = code.split("--");
+            System.out.println("Ejecutando script SQL para crear la base de datos...");
+            for (String query : queries) {
+                query = query.trim();
+                if (!query.isEmpty()) {
+                    try (PreparedStatement statement = connection.prepareStatement(query)) {
+                        statement.executeUpdate();
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnect();
+        }
+    }
+
+    /**
+     * Disconnects from the database by closing the connection.
+     */
+    public static void disconnect() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public static String leerFichero(String ruta) {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                sb.append(linea).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+
 
     public void conectar() {
         try {
