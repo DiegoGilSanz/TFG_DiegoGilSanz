@@ -4,10 +4,10 @@
     "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
   <session-factory>
-    <property name="connection.url">jdbc:mysql://localhost:3306/nextgenmma</property>
+    <property name="connection.url">jdbc:mysql://77.223.215.67:3306/nextgenmmadiego</property>
     <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-      <property name="connection.username">root</property>
-    <property name="hibernate.connection.password"/>
+      <property name="connection.username">nextgenmmadiego</property>
+    <property name="hibernate.connection.password">GezFaHfKNyFnnRDM</property>
       <mapping class="diegogil.com.clases.Entrenador"/>
       <mapping class="diegogil.com.clases.Federacion"/>
       <mapping class="diegogil.com.clases.Gimnasio"/>

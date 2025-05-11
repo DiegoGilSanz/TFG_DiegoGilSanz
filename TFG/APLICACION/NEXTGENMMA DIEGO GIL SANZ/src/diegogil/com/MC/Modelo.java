@@ -40,11 +40,11 @@ public class Modelo {
     private static Connection conexion;
     private static Connection connection;
 
-    private static String ip="localhost";
+    private static String ip="77.223.215.67";
     private static String port="3306";
-    private static String name="nextgenmma";
-    private static String user="root";
-    private static String password="";
+    private static String name="nextgenmmadiego";
+    private static String user="nextgenmmadiego";
+    private static String password="GezFaHfKNyFnnRDM";
     private static String sqlRoute="src/SQLSCRIPT/ScriptTFGMMA_JAVA.sql";
     private static String sgbd="mysql";
 
@@ -150,7 +150,7 @@ public class Modelo {
 
     private static Connection conectarJasper() {
         try {
-            return DriverManager.getConnection("jdbc:mysql://localhost:3306/nextgenmma", "root", "");
+            return DriverManager.getConnection("jdbc:mysql://77.223.215.67:3306/nextgenmmadiego", "nextgenmmadiego", "GezFaHfKNyFnnRDM");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
