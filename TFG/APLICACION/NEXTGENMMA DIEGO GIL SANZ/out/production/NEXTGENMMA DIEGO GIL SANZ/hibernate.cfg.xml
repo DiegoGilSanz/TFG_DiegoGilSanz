@@ -4,10 +4,13 @@
     "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
   <session-factory>
-    <property name="connection.url">jdbc:mysql://77.223.215.67:3306/nextgenmmadiego</property>
+
+    <property name="connection.url">jdbc:mysql://54.82.86.20:3306/nextgenmma?useSSL=false&amp;allowPublicKeyRetrieval=true</property>
     <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-      <property name="connection.username">nextgenmmadiego</property>
-    <property name="hibernate.connection.password">GezFaHfKNyFnnRDM</property>
+      <property name="connection.username">tfg_api</property>
+    <property name="hibernate.connection.password">55NN,5&amp;8SH,oMY7F~6v1/t0~;VH[N[G</property>
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.format_sql">true</property>
       <mapping class="diegogil.com.clases.Entrenador"/>
       <mapping class="diegogil.com.clases.Federacion"/>
       <mapping class="diegogil.com.clases.Gimnasio"/>
@@ -15,8 +18,7 @@
       <mapping class="diegogil.com.clases.Peleador"/>
       <mapping class="diegogil.com.clases.Post"/>
 
-      <!-- <property name="connection.username"/> -->
-    <!-- <property name="connection.password"/> -->
+
 
     <!-- DB schema will be updated if needed -->
 

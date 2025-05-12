@@ -1,6 +1,6 @@
-CREATE  DATABASE if not exists nextgenmmadiego;
+CREATE  DATABASE if not exists nextgenmma;
 --
-use nextgenmmadiego;
+use nextgenmma;
 --
 CREATE TABLE if not exists gimnasio (
     id_gimnasio INT PRIMARY KEY AUTO_INCREMENT,

@@ -40,11 +40,11 @@ public class Modelo {
     private static Connection conexion;
     private static Connection connection;
 
-    private static String ip="77.223.215.67";
+    private static String ip="54.82.86.20";
     private static String port="3306";
-    private static String name="nextgenmmadiego";
-    private static String user="nextgenmmadiego";
-    private static String password="GezFaHfKNyFnnRDM";
+    private static String name="nextgenmma";
+    private static String user="tfg_api";
+    private static String password="55NN,5&8SH,oMY7F~6v1/t0~;VH[N[G";
     private static String sqlRoute="src/SQLSCRIPT/ScriptTFGMMA_JAVA.sql";
     private static String sgbd="mysql";
 
@@ -150,7 +150,7 @@ public class Modelo {
 
     private static Connection conectarJasper() {
         try {
-            return DriverManager.getConnection("jdbc:mysql://77.223.215.67:3306/nextgenmmadiego", "nextgenmmadiego", "GezFaHfKNyFnnRDM");
+            return DriverManager.getConnection("jdbc:mysql://54.82.86.20:3306/nextgenmma", "tfg_api", "55NN,5&8SH,oMY7F~6v1/t0~;VH[N[G");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -182,6 +182,7 @@ public class Modelo {
             session.beginTransaction();
             session.save(peleador);
             session.getTransaction().commit();
+
         }
     }
 
