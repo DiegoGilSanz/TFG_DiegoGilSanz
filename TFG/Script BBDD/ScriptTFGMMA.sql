@@ -49,7 +49,7 @@ CREATE TABLE if not exists peleador (
     id_peleador INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100),
-    dni VARCHAR(9),
+    dni VARCHAR(15),
     peso INT,
     victorias INT,
     apodo VARCHAR(100),

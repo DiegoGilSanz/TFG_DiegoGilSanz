@@ -72,3 +72,11 @@ CREATE TABLE if not exists post (
     mensaje VARCHAR(100),
     foto BLOB
 );
+--
+CREATE TABLE if not exists admin (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    contraseña varchar(500)
+);
+
+-- 
+insert into admin(contraseña) values ("8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");

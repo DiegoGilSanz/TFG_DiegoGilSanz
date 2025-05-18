@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>README - NEXTGENMMA</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f0f0f, #1f1f1f);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #E50914;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 36px;
+      letter-spacing: 2px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #2c2c2e;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 59, 48, 0.3);
+    }
+
+    h2 {
+      color: #FF453A;
+      margin-bottom: 10px;
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    button {
+      background-color: #FF453A;
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      font-size: 16px;
+      margin-top: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff5e57;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #888;
+    }
+
+    a {
+      color: #FF9500;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📘 NEXTGENMMA</h1>
+<p><strong>NEXTGENMMA</strong> es una aplicación de escritorio desarrollada en Java para la gestión de gimnasios, peleadores, entrenadores y ligas dentro del mundo de las MMA.</p>
+
+<h2>🚪 Modos de acceso</h2>
+<ul>
+  <li><strong>Administrador:</strong> Accede al panel completo de gestión tras iniciar sesión con contraseña encriptada.</li>
+  <li><strong>Gimnasio:</strong> Inicia sesión mediante combo box + contraseña y puede ver estadísticas de peleadores activos.</li>
+  <li><strong>Invitado:</strong> Accede directamente a publicaciones (posts).</li>
+</ul>
+
+<h2>🔐 Inicio de sesión</h2>
+<ul>
+  <li>Validación de contraseñas con <code>SHA-256</code>.</li>
+  <li>Autenticación independiente para administradores y gimnasios.</li>
+</ul>
+
+<h2>👤 Gestión de Peleadores</h2>
+<ul>
+  <li>Alta de nuevos peleadores con validación de campos.</li>
+  <li>Modificación de datos de peleadores existentes.</li>
+  <li>Eliminación (solo si no tienen peleas asociadas).</li>
+  <li>Campos gestionados: nombre, apellido, apodo, DNI, peso, victorias, fecha de nacimiento, gimnasio, entrenador y liga.</li>
+</ul>
+
+<h2>🏋️ Gestión de Gimnasios</h2>
+<ul>
+  <li>Alta de nuevos gimnasios con contraseña encriptada.</li>
+  <li>Modificación y eliminación de gimnasios.</li>
+  <li>Relación con peleadores y entrenadores.</li>
+  <li>Campos gestionados: nombre, dirección, ciudad, NIF, web, contraseña.</li>
+</ul>
+
+<h2>🥇 Gestión de Ligas</h2>
+<ul>
+  <li>Alta, modificación y eliminación de ligas.</li>
+  <li>Asociación con federaciones.</li>
+  <li>Campos gestionados: nombre, ciudad, número de participantes y federación.</li>
+</ul>
+
+<h2>🧑‍🏫 Gestión de Entrenadores</h2>
+<ul>
+  <li>Alta, modificación y eliminación de entrenadores.</li>
+  <li>Relación directa con gimnasios.</li>
+  <li>Campos gestionados: nombre, apellido, DNI, número de colegiado, experiencia y gimnasio.</li>
+</ul>
+
+<h2>📰 Gestión de Posts</h2>
+<ul>
+  <li>Creación de posts con título, mensaje y foto.</li>
+  <li>Modificación y eliminación de publicaciones.</li>
+  <li>Interfaz visible para invitados.</li>
+</ul>
+
+<h2>🖼️ Adjuntar Imagen</h2>
+<ul>
+  <li>Funcionalidad para adjuntar una imagen a un post.</li>
+</ul>
+
+<h2>📊 Combos y Listados Dinámicos</h2>
+<ul>
+  <li>Actualización automática de listas y combos tras operaciones CRUD.</li>
+  <li>Filtros por gimnasio, liga y entrenador.</li>
+</ul>
+
+<h2>⚠️ Validaciones y Seguridad</h2>
+<ul>
+  <li>Validación de campos en todas las entidades.</li>
+  <li>Confirmaciones antes de operaciones críticas como eliminar o modificar.</li>
+</ul>
+
+<h2>📨 Comunicacion directa con la federacion mediante mail</h2>
+<ul>
+  <li>Cada <strong>Gimnasio</strong> sera capaz de mandar un correo electronico a la federacion para comunicar cambios de los peleadores</li>
+  
+</ul>
+
+<h2>📌 Notas adicionales</h2>
+<ul>
+  <li>La aplicación es de escritorio y no requiere conexión a Internet en formato local, en la que se conecta la BBDD centralizada si</li>
+</ul>
+
+</body>
+</html>

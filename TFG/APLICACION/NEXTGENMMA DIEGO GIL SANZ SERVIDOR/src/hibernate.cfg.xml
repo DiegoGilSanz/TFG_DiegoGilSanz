@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+
+    <property name="connection.url">jdbc:mysql://54.82.86.20:3306/nextgenmma?useSSL=false&amp;allowPublicKeyRetrieval=true</property>
+    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+      <property name="connection.username">tfg_api</property>
+    <property name="hibernate.connection.password">55NN,5&amp;8SH,oMY7F~6v1/t0~;VH[N[G</property>
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.format_sql">true</property>
+      <mapping class="diegogil.com.clases.Entrenador"/>
+      <mapping class="diegogil.com.clases.Federacion"/>
+      <mapping class="diegogil.com.clases.Gimnasio"/>
+      <mapping class="diegogil.com.clases.Liga"/>
+      <mapping class="diegogil.com.clases.Peleador"/>
+      <mapping class="diegogil.com.clases.Post"/>
+    <mapping class="diegogil.com.clases.Admin"/>
+
+
+
+    <!-- DB schema will be updated if needed -->
+
+    <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+  </session-factory>
+</hibernate-configuration>

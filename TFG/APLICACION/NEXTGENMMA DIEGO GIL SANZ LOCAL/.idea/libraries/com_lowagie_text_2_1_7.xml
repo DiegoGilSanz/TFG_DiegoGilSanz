@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="com.lowagie.text-2.1.7">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/com.lowagie.text-2.1.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-beanutils-1.9.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections4-4.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections4-4.4-tests.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.2.1-1.0.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.2.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-digester-2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections4-4.4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections4-4.4-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections4-4.4-test-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
