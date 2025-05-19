@@ -19,7 +19,10 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
-
+/**
+ * Clase Controlador que implementa la lógica de la aplicación.
+ * Se encarga de gestionar las interacciones entre el modelo, las vistas y los eventos de usuario.
+ */
 public class Controlador implements ActionListener, ListSelectionListener {
     public static final File AYUDA = new File("src/html/Ayuda.html");
     private Modelo modelo;
@@ -30,6 +33,19 @@ public class Controlador implements ActionListener, ListSelectionListener {
     private VistaLoginGimnasio vistaLoginGimnasio;
     private VistaGestion vistaGestion;
     int numeroPost = 1;
+
+    /**
+     * Constructor de la clase Controlador.
+     * Inicializa el modelo y las vistas, y establece los listeners para los eventos.
+     *
+     * @param modelo          El modelo de la aplicación.
+     * @param vistaUsers      La vista de usuarios.
+     * @param vistaPost       La vista de publicaciones.
+     * @param vistaLoginAdmin La vista de inicio de sesión del administrador.
+     * @param vistaGimnasio   La vista del gimnasio.
+     * @param vistaLoginGimnasio La vista de inicio de sesión del gimnasio.
+     * @param vistaGestion    La vista de gestión.
+     */
 
     public Controlador(Modelo modelo, VistaUsuarios vistaUsers, VistaPost vistaPost, VistaLoginAdmin vistaLoginAdmin, VistaGimnasio vistaGimnasio, VistaLoginGimnasio vistaLoginGimnasio, VistaGestion vistaGestion) {
         this.modelo = modelo;
@@ -45,7 +61,11 @@ public class Controlador implements ActionListener, ListSelectionListener {
         addListSelectionListener(this);
         inicializarPost(modelo.getPosts());
     }
-
+    /**
+     * Método para inicializar las vistas
+     *
+     *
+     */
     public void iniciar() {
         vistaUsers.setVisible(true);
         vistaPost.setVisible(false);
@@ -55,7 +75,11 @@ public class Controlador implements ActionListener, ListSelectionListener {
         vistaGestion.setVisible(false);
 
     }
-
+    /**
+     * Método que gestiona los eventos de acción de los botones.
+     *
+     * @param e Evento de acción capturado.
+     */
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -125,6 +149,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         peleador.setLiga((Liga) vistaGestion.peleadorLigaCombo.getSelectedItem());
                         modelo.altaPeleador(peleador);
                         listarPeleadores(modelo.getPeleadores());
+                        vaciarCamposPeleador();
 
                     }
                 }
@@ -156,6 +181,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         peleadorModificar.setLiga((Liga) vistaGestion.peleadorLigaCombo.getSelectedItem());
                         modelo.modificarPeleador(peleadorModificar);
                         listarPeleadores(modelo.getPeleadores());
+                        vaciarCamposPeleador();
                     }
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar el peleador porque no existe o no esta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -180,6 +206,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         comboEntrenadorGimnasio();
                         comboInformesGimnasio();
                         comboGimnasioLogin();
+                        vaciarCamposGimnasio();
 
                     }
                 }
@@ -221,6 +248,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         comboEntrenadorGimnasio();
                         comboInformesGimnasio();
                         comboGimnasioLogin();
+                        vaciarCamposGimnasio();
                     }
                    } catch (Exception ex) {
                         JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar el gimnasio porque no existe o no esta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -240,6 +268,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         listarLigas(modelo.getLigas());
                         comboPeleadorLiga();
                         comboInformesLiga();
+                        validarCamposLiga();
                     }
                 }
                 break;
@@ -250,6 +279,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         comboPeleadorLiga();
                         comboInformesLiga();
                         listarLigas(modelo.getLigas());
+
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(vistaGestion, "No se puede eliminar la liga porque tiene peleadores asociados o no existen ligas.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -272,6 +302,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         listarLigas(modelo.getLigas());
                         comboPeleadorLiga();
                         comboInformesLiga();
+                        validarCamposLiga();
                     }
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar la liga porque no existe o no esta seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -291,6 +322,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         modelo.altaEntrenador(entrenador);
                         listarEntrenadores(modelo.getEntrenadores());
                         comboPeleadorEntrenador();
+                        vaciarCamposEntrenador();
 
                     }
                 }
@@ -320,6 +352,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         modelo.modificarEntrenador(entrenadorModificar);
                         listarEntrenadores(modelo.getEntrenadores());
                         comboPeleadorEntrenador();
+                        vaciarCamposEntrenador();
 
                     }
                     } catch (Exception ex) {
@@ -341,6 +374,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         post.setFoto(vistaGestion.postImagenSeleccionada); // Asigna la imagen seleccionada
                         modelo.altaPost(post);
                         listarPosts(modelo.getPosts());
+                        vaciarCamposPost();
                     }
                 }
                 break;
@@ -365,6 +399,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         postModificar.setMensaje(vistaGestion.postMensajeTxt.getText());
                         modelo.modificarPost(postModificar);
                         listarPosts(modelo.getPosts());
+                        vaciarCamposPost();
                     }
                         } catch (Exception ex) {
                             JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar el post porque no existe o no esta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -382,6 +417,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         modelo.altaFederacion(federacion);
                         listarFederaciones(modelo.getFederaciones());
                         comboLigaFederacion();
+                        vaciarCamposFederacion();
                     }
                 }
                 break;
@@ -409,6 +445,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         modelo.modificarFederacion(federacionModificar);
                         listarFederaciones(modelo.getFederaciones());
                         comboLigaFederacion();
+                        vaciarCamposFederacion();
                     }
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar la federación porque no existe o no esta seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -506,6 +543,88 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
 
     }
+    /**
+     * Método para vaciar los campos del formulario de peleador.
+     *
+     */
+    private void vaciarCamposPeleador() {
+        vistaGestion.peleadorNombreTxt.setText("");
+        vistaGestion.peleadorApellidoTxt.setText("");
+        vistaGestion.peleadorApodoTxt.setText("");
+        vistaGestion.peleadorDniTxt.setText("");
+        vistaGestion.peleadorPesoTxt.setText("");
+        vistaGestion.peleadorVictoriasTxt.setText("");
+        vistaGestion.peleadorNacimientoTxt.setDate(null);
+        vistaGestion.peleadorGimnasioCombo.setSelectedItem(null);
+        vistaGestion.peleadorEntrenadorCombo.setSelectedItem(null);
+        vistaGestion.peleadorLigaCombo.setSelectedItem(null);
+    }
+
+    /**
+     * Método para vaciar los campos del formulario de gimnasio.
+     *
+     */
+
+
+    private void vaciarCamposGimnasio() {
+        vistaGestion.gimnasioNombreTxt.setText("");
+        vistaGestion.gimnasioDireccionTxt.setText("");
+        vistaGestion.gimnasioCiudadTxt.setText("");
+        vistaGestion.gimnasioContraseñaTxt.setText("");
+        vistaGestion.gimnasioNifTxt.setText("");
+        vistaGestion.gimnasioWebTxt.setText("");
+    }
+    /**
+     * Método para vaciar los campos del formulario de entrenador.
+     *
+     */
+
+
+    private void vaciarCamposEntrenador() {
+        vistaGestion.entrenadorNombreTxt.setText("");
+        vistaGestion.entrenadorApellidoTxt.setText("");
+        vistaGestion.entrenadorDniTxt.setText("");
+        vistaGestion.entrenadorColegiadoTxt.setText("");
+        vistaGestion.entrenadorExperienciaTxt.setText("");
+        vistaGestion.entrenadorGimnasioCombo.setSelectedItem(null);
+    }
+    /**
+     * Método para vaciar los campos del formulario de liga.
+     *
+     */
+
+
+    private void vaciarCamposLiga() {
+        vistaGestion.ligaNombreTxt.setText("");
+        vistaGestion.ligaCiudadTxt.setText("");
+        vistaGestion.ligaParticipantesTxt.setText("");
+        vistaGestion.ligaFederacionCombo.setSelectedItem(null);
+    }
+    /**
+     * Método para vaciar los campos del formulario de federación.
+     *
+     */
+    private void vaciarCamposFederacion() {
+        vistaGestion.federacionNombreTxt.setText("");
+        vistaGestion.federacionArteMarcialTxt.setText("");
+        vistaGestion.federacionNumeroAsociacionTxt.setText("");
+        vistaGestion.federacionAñoFundacionTxt.setDate(null);
+    }
+    /**
+     * Método para vaciar los campos del formulario de post.
+     *
+     *
+     */
+    private void vaciarCamposPost() {
+        vistaGestion.postTituloTxt.setText("");
+        vistaGestion.postMensajeTxt.setText("");
+        vistaGestion.postImagenSeleccionada = null;
+    }
+    /**
+     * Método para validar los campos del formulario de peleador.
+     *
+     * @return true si los campos son válidos, false en caso contrario.
+     */
     private boolean validarCamposPeleador() {
         // Validar campos vacíos
         if (vistaGestion.peleadorNombreTxt.getText().isEmpty() ||
@@ -565,6 +684,11 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
         return true;
     }
+    /**
+     * Método para validar los campos del formulario de gimnasio.
+     *
+     * @return true si los campos son válidos, false en caso contrario.
+     */
     private boolean validarCamposEntrenador() {
         if (vistaGestion.entrenadorNombreTxt.getText().isEmpty() || vistaGestion.entrenadorApellidoTxt.getText().isEmpty() ||
                 vistaGestion.entrenadorDniTxt.getText().isEmpty() || vistaGestion.entrenadorColegiadoTxt.getText().isEmpty() ||
@@ -612,6 +736,11 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
         return true;
     }
+    /**
+     * Método para validar los campos del formulario de federación.
+     *
+     * @return true si los campos son válidos, false en caso contrario.
+     */
 
 
     private boolean validarCamposLiga() {
@@ -656,7 +785,11 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
         return true;
     }
-
+    /**
+     * Método para validar los campos del formulario de federación.
+     *
+     * @return true si los campos son válidos, false en caso contrario.
+     */
     private boolean validarCamposFederacion() {
         // Validar campos vacíos
         if (vistaGestion.federacionNombreTxt.getText().isEmpty() ||
@@ -696,6 +829,11 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
         return true;
     }
+    /**
+     * Método para validar los campos del formulario de gimnasio.
+     *
+     * @return true si los campos son válidos, false en caso contrario.
+     */
 
 private boolean validarCamposGimnasio() {
     // Validar campos vacíos
@@ -747,6 +885,11 @@ private boolean validarCamposGimnasio() {
 
     return true;
 }
+    /**
+     * Método para validar los campos del formulario de post.
+     *
+     * @return true si los campos son válidos, false en caso contrario.
+     */
 
     private boolean validarCamposPost() {
         if (vistaGestion.postTituloTxt.getText().isEmpty() || vistaGestion.postMensajeTxt.getText().isEmpty()) {
@@ -755,6 +898,11 @@ private boolean validarCamposGimnasio() {
         }
         return true;
     }
+    /**
+     * Método para agregar ActionListeners a los botones de las vistas.
+     *
+     * @param listener el ActionListener a agregar.
+     */
     public void addActionListeners(ActionListener listener){
         vistaUsers.usuarioAdministradorBtn.addActionListener(listener);
         vistaUsers.usuarioAdministradorBtn.setActionCommand("administrador");
@@ -867,6 +1015,11 @@ private boolean validarCamposGimnasio() {
 
 
     }
+    /**
+     * Método para agregar ListSelectionListeners a las listas de la vista de gestión.
+     *
+     * @param listener el ListSelectionListener a agregar.
+     */
     void addListSelectionListener(ListSelectionListener listener){
         vistaGestion.peleadorLista.addListSelectionListener(listener);
         vistaGestion.gimnasioLista.addListSelectionListener(listener);
@@ -876,6 +1029,10 @@ private boolean validarCamposGimnasio() {
         vistaGestion.postLista.addListSelectionListener(listener);
 
     }
+    /**
+     * Método para actualizar los combos de la vista de gestión.
+     *
+     */
     void actualizarCombos(){
         comboPeleadorGimnasio();
         comboPeleadorEntrenador();
@@ -890,6 +1047,10 @@ private boolean validarCamposGimnasio() {
         comboInformesGimnasio();
         
     }
+    /**
+     * Método para actualizar el combo gimnasio del peleador en la vista de gestión.
+     *
+     */
     void comboPeleadorGimnasio() {
         vistaGestion.peleadorGimnasioCombo.removeAllItems();
         for (Gimnasio gimnasio : modelo.getGimnasios()) {
@@ -897,6 +1058,10 @@ private boolean validarCamposGimnasio() {
         }
         vistaGestion.peleadorGimnasioCombo.setSelectedItem(null); // No item selected by default
     }
+    /**
+     * Método para actualizar el combo entrenador del peleador en la vista de gestión.
+     *
+     */
 
     void comboPeleadorEntrenador() {
         vistaGestion.peleadorEntrenadorCombo.removeAllItems();
@@ -905,6 +1070,10 @@ private boolean validarCamposGimnasio() {
         }
         vistaGestion.peleadorEntrenadorCombo.setSelectedItem(null); // No item selected by default
     }
+    /**
+     * Método para actualizar el combo liga del peleador en la vista de gestión.
+     *
+     */
 
     void comboPeleadorLiga() {
         vistaGestion.peleadorLigaCombo.removeAllItems();
@@ -913,24 +1082,40 @@ private boolean validarCamposGimnasio() {
         }
         vistaGestion.peleadorLigaCombo.setSelectedItem(null); // No item selected by default
     }
+    /**
+     * Método para actualizar el combo gimnasio del entrenador en la vista de gestión.
+     *
+     */
     void comboEntrenadorGimnasio() {
         vistaGestion.entrenadorGimnasioCombo.removeAllItems();
         for (Gimnasio gimnasio : modelo.getGimnasios()) {
             vistaGestion.entrenadorGimnasioCombo.addItem(gimnasio);
         }
     }
+    /**
+     * Método para actualizar el combo federación de la liga en la vista de gestión.
+     *
+     */
     void comboLigaFederacion() {
         vistaGestion.ligaFederacionCombo.removeAllItems();
         for (Federacion federacion : modelo.getFederaciones()) {
             vistaGestion.ligaFederacionCombo.addItem(federacion);
         }
     }
+    /**
+     * Método para actualizar el combo federación de la liga en la vista de gestión.
+     *
+     */
     void comboGimnasioLogin() {
         vistaLoginGimnasio.loginGimnasioCombo.removeAllItems();
         for (Gimnasio gimnasio : modelo.getGimnasios()) {
             vistaLoginGimnasio.loginGimnasioCombo.addItem(gimnasio);
         }
     }
+    /**
+     * Método para actualizar el combo gimnasio de la liga en la vista de gestión.
+     *
+     */
     void  comboGimnasioGimnasio(){
         vistaGimnasio.solicitudGimnasioCombo.removeAllItems();
         for (Gimnasio gimnasio:modelo.getGimnasios()){
@@ -943,24 +1128,41 @@ private boolean validarCamposGimnasio() {
             vistaGimnasio.solicitudEntrenadorCombo.addItem(entrenador);
         }
     }
+    /**
+     * Método para actualizar el combo gimnasio de la liga en la vista de gestión.
+     *
+     */
     void comboGimnasioLiga(){
         vistaGimnasio.solicitudLigaCombo.removeAllItems();
         for (Liga liga:modelo.getLigas()){
             vistaGimnasio.solicitudLigaCombo.addItem(liga);
         }
     }
+    /**
+     * Método para actualizar el combo gimnasio de la liga en la vista de gestión.
+     *
+     */
     void comboInformesLiga(){
         vistaGestion.InformesComboLiga.removeAllItems();
         for (Liga liga:modelo.getLigas()){
             vistaGestion.InformesComboLiga.addItem(liga);
         }
     }
+    /**
+     * Método para actualizar el combo gimnasio de la liga en la vista de gestión.
+     *
+     */
     void comboInformesGimnasio(){
         vistaGestion.InformesComboGimnasio.removeAllItems();
         for (Gimnasio gimnasio:modelo.getGimnasios()){
             vistaGestion.InformesComboGimnasio.addItem(gimnasio);
         }
     }
+    /**
+     * Método para mostrar la información de un peleador, gimnasio, entrenador, liga o federación en la vista de gestión.
+     *
+     *
+     */
 
 
     @Override
@@ -1023,6 +1225,10 @@ private boolean validarCamposGimnasio() {
         }
 
     }
+    /**
+     * Método para actualizar las listas de la vista de gestión.
+     *
+     */
     void actualizarListas(){
         listarPeleadores(modelo.getPeleadores());
         listarGimnasios(modelo.getGimnasios());
@@ -1032,6 +1238,11 @@ private boolean validarCamposGimnasio() {
         listarPosts(modelo.getPosts());
 
     }
+    /**
+     * Método para listar los peleadores en la vista de gestión.
+     *
+     * @param peleadores la lista de peleadores a mostrar.
+     */
 
     private void listarPeleadores(ArrayList<Peleador> peleadores){
         vistaGestion.dflmpeleador.clear();
@@ -1039,36 +1250,65 @@ private boolean validarCamposGimnasio() {
             vistaGestion.dflmpeleador.addElement(peleador);
         }
     }
+    /**
+     * Método para listar los gimnasios en la vista de gestión.
+     *
+     * @param gimnasios la lista de gimnasios a mostrar.
+     */
     private void listarGimnasios(ArrayList<Gimnasio> gimnasios){
         vistaGestion.dflmgimnasio.clear();
         for (Gimnasio gimnasio:gimnasios){
             vistaGestion.dflmgimnasio.addElement(gimnasio);
         }
     }
+    /**
+     * Método para listar los entrenadores en la vista de gestión.
+     *
+     * @param entrenadores la lista de entrenadores a mostrar.
+     */
 private void listarEntrenadores(ArrayList<Entrenador> entrenadores){
         vistaGestion.dflmentrenador.clear();
         for (Entrenador entrenador:entrenadores){
             vistaGestion.dflmentrenador.addElement(entrenador);
         }
     }
+    /**
+     * Método para listar las ligas en la vista de gestión.
+     *
+     * @param ligas la lista de ligas a mostrar.
+     */
 private void listarLigas(ArrayList<Liga> ligas){
         vistaGestion.dflmliga.clear();
         for (Liga liga:ligas){
             vistaGestion.dflmliga.addElement(liga);
         }
     }
+    /**
+     * Método para listar las federaciones en la vista de gestión.
+     *
+     * @param federaciones la lista de federaciones a mostrar.
+     */
 private void listarFederaciones(ArrayList<Federacion> federaciones){
         vistaGestion.dflmfederacion.clear();
         for (Federacion federacion:federaciones){
             vistaGestion.dflmfederacion.addElement(federacion);
         }
     }
+    /**
+     * Método para listar los posts en la vista de gestión.
+     *
+     * @param posts la lista de posts a mostrar.
+     */
 private void listarPosts(ArrayList<Post> posts) {
     vistaGestion.dflmpost.clear();
     for (Post post : posts) {
         vistaGestion.dflmpost.addElement(post);
     }
 }
+ /*
+ Metodo para inicializar el post en la vista de post.
+  */
+
 private void inicializarPost(ArrayList<Post> posts){
         try {
 
@@ -1087,6 +1327,10 @@ private void inicializarPost(ArrayList<Post> posts){
         }
 
 }
+    /**
+     * Método para mostrar el siguiente post en la vista de post.
+     *
+     */
     private void siguientePost() {
         if (modelo.getPosts().isEmpty()) {
             JOptionPane.showMessageDialog(vistaPost, "No hay posts disponibles.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1103,6 +1347,9 @@ private void inicializarPost(ArrayList<Post> posts){
         }
         mostrarPost(numeroPost);
     }
+    /**
+     * Método para volver al post anterior.
+     */
 
     private void volverPost() {
         if (modelo.getPosts().isEmpty()) {
@@ -1120,7 +1367,11 @@ private void inicializarPost(ArrayList<Post> posts){
         }
         mostrarPost(numeroPost);
     }
-
+    /**
+     * Método para mostrar un post en la vista de post.
+     *
+     * @param index el índice del post a mostrar.
+     */
     private void mostrarPost(int index) {
         if (index < 0 || index >= modelo.getPosts().size()) {
             JOptionPane.showMessageDialog(vistaPost, "Índice de post inválido.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1135,6 +1386,11 @@ private void inicializarPost(ArrayList<Post> posts){
             vistaPost.postImagenTxt.setIcon(null);
         }
     }
+    /**
+     * Método para adjuntar una imagen al post.
+     *
+     * @return true si la imagen se adjunta correctamente, false en caso contrario.
+     */
     private boolean adjuntarImagen() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Imágenes (jpg, jpeg, png)", "jpg", "jpeg", "png"));
@@ -1144,33 +1400,28 @@ private void inicializarPost(ArrayList<Post> posts){
             java.io.File file = fileChooser.getSelectedFile();
             String fileName = file.getName().toLowerCase();
 
-            // Validar formato de archivo
             if (!(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png"))) {
                 JOptionPane.showMessageDialog(vistaGestion, "El archivo debe ser una imagen en formato JPG, JPEG o PNG.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
 
             try {
-                // Leer y redimensionar la imagen
                 BufferedImage imagenOriginal = javax.imageio.ImageIO.read(file);
                 if (imagenOriginal == null) {
                     JOptionPane.showMessageDialog(vistaGestion, "El archivo seleccionado no es una imagen válida.", "Error", JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
 
-                // Redimensionar la imagen a un tamaño más pequeño (e.g., 500x500 píxeles)
                 Image imagenRedimensionada = imagenOriginal.getScaledInstance(500, 500, Image.SCALE_SMOOTH);
                 BufferedImage bufferedResizedImage = new BufferedImage(500, 500, BufferedImage.TYPE_INT_RGB);
                 Graphics2D g2d = bufferedResizedImage.createGraphics();
                 g2d.drawImage(imagenRedimensionada, 0, 0, null);
                 g2d.dispose();
 
-                // Convertir la imagen redimensionada a un array de bytes
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 javax.imageio.ImageIO.write(bufferedResizedImage, "jpg", baos);
                 byte[] imageBytes = baos.toByteArray();
 
-                // Validar tamaño de la imagen (e.g., máximo 16 MB para LONGBLOB)
                 if (imageBytes.length > 16 * 1024 * 1024) {
                     JOptionPane.showMessageDialog(vistaGestion, "La imagen es demasiado grande. Seleccione una imagen más pequeña.", "Error", JOptionPane.ERROR_MESSAGE);
                     return false;

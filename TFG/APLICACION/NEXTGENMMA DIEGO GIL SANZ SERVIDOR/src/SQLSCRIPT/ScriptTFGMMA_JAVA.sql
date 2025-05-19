@@ -18,7 +18,7 @@ CREATE TABLE if not exists federacion (
     nombre VARCHAR(100) NOT NULL,
     arte_marcial VARCHAR(100),
     fecha_fundacion date,
-    numero_asociacion INT 
+    numero_asociacion INT
 );
 
 --
@@ -50,7 +50,7 @@ CREATE TABLE if not exists peleador (
     id_peleador INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100),
-    dni VARCHAR(9),
+    dni VARCHAR(15),
     peso INT,
     victorias INT,
     apodo VARCHAR(100),
@@ -73,3 +73,13 @@ CREATE TABLE if not exists post (
     mensaje VARCHAR(100),
     foto BLOB
 );
+--
+CREATE TABLE if not exists admin (
+    id INT PRIMARY KEY,
+    contraseña varchar(500)
+    );
+
+--
+ALTER TABLE admin ADD CONSTRAINT chk_single_row CHECK (id = 1);
+--
+insert into admin(id,contraseña) values (1,"8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");

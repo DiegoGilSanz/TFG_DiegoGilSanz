@@ -11,6 +11,9 @@ public class VistaLoginAdmin extends JFrame{
      public JMenuItem inicio3;
      public JMenuItem informacion3;
      public JMenuItem salir3;
+        /**
+        * Constructor de la clase VistaLoginAdmin
+        */
 
      public VistaLoginAdmin() {
           setContentPane(panel1);
@@ -24,6 +27,9 @@ public class VistaLoginAdmin extends JFrame{
 
 
      }
+        /**
+        * Metodo que crea el menu de la ventana
+        */
      private void crearMenu() {
           menuBar1 = new JMenuBar();
           menu1 = new JMenu("Menu");

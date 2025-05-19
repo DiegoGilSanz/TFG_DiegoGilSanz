@@ -3,7 +3,9 @@ package diegogil.com.clases;
 import javax.persistence.*;
 
 @Entity
+
 public class Admin {
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")

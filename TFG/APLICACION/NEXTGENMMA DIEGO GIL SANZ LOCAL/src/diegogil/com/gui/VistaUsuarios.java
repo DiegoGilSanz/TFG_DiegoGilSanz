@@ -13,6 +13,9 @@ public class VistaUsuarios extends JFrame {
     public JMenuItem inicio4;
     public JMenuItem informacion4;
     public JMenuItem salir4;
+    /**
+     * Constructor de la clase VistaUsuarios
+     */
     public VistaUsuarios() {
         setContentPane(panel1);
         setTitle("Post");
@@ -25,6 +28,9 @@ public class VistaUsuarios extends JFrame {
 
 
     }
+    /**
+     * Metodo que crea el menu de la ventana
+     */
     private void crearMenu() {
 
         menuBar1 = new JMenuBar();

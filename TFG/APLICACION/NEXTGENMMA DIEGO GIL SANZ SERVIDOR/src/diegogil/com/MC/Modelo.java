@@ -9,7 +9,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-
+import diegogil.com.config.HibernateUtil;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -36,16 +36,19 @@ public class Modelo {
     public static final String JASPER_LIGAS = "src/jaspers/ligas.jasper";
     public static final String JASPER_PELEADORESLIGA = "src/jaspers/Peleadores_Liga.jasper";
     public static final String JASPER_PELEADORESGIMNASIO = "src/jaspers/Peleadores_Gimnasio.jasper";
+    public static final String JASPER_PELADORESLIGA = "src/jaspers/Grafico_Peleadores_Liga.jasper";
 
     private static Connection conexion;
+    private static Connection connection;
 
-    private static String ip="54.82.86.20";
+    private static String ip="localhost";
     private static String port="3306";
     private static String name="nextgenmma";
-    private static String user="tfg_api";
-    private static String password="55NN,5&8SH,oMY7F~6v1/t0~;VH[N[G";
+    private static String user="root";
+    private static String password="";
     private static String sqlRoute="src/SQLSCRIPT/ScriptTFGMMA_JAVA.sql";
     private static String sgbd="mysql";
+
 
     public Modelo() {
 
@@ -54,13 +57,79 @@ public class Modelo {
 
 
     }
+    /**
+     * Conecta a la base de datos utilizando los parámetros configurados.
+     * Si la base de datos no existe, intenta crearla.
+     *
+     * @return La conexión establecida con la base de datos.
+     */
+    public static Connection connect() {
+        try {
+            Properties properties = HibernateUtil.loadProperties();
+            if (connection == null || connection.isClosed()) {
 
+                try {
+                    connection = DriverManager.getConnection(HibernateUtil.buildConnectionUrl(properties),properties.getProperty("hibernate.connection.user"), properties.getProperty("hibernate.connection.pass") );
+                } catch (SQLException e) {
+                    createDatabase();
+                    try {
+                        connection = DriverManager.getConnection(HibernateUtil.buildConnectionUrl(properties),properties.getProperty("hibernate.connection.user"), properties.getProperty("hibernate.connection.pass") );
+                    } catch (SQLException ex) {
+                        JOptionPane.showConfirmDialog(null, "Error al conectar a la base de datos. Asegúrate de que el servidor esté en ejecución y la configuración sea correcta.", "Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Conectado a la base de datos: " + name + " en " + ip + ":" + port + " como " + user + " con contraseña: " + password);
+        return connection;
+    }
+    /**
+     * Crea la base de datos utilizando un script SQL.
+     * Se conecta a la base de datos y ejecuta el script para crear las tablas y datos iniciales.
+     */
 
+    private static void createDatabase() {
+        try {
+            Properties properties = HibernateUtil.loadProperties();
+            connection = DriverManager.getConnection(HibernateUtil.buildConnectionUrl(properties),properties.getProperty("hibernate.connection.user"), properties.getProperty("hibernate.connection.pass") );
+            String code = leerFichero(sqlRoute);
+            String[] queries = code.split("--");
+            System.out.println("Ejecutando script SQL para crear la base de datos...");
+            for (String query : queries) {
+                query = query.trim();
+                if (!query.isEmpty()) {
+                    try (PreparedStatement statement = connection.prepareStatement(query)) {
+                        statement.executeUpdate();
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnect();
+        }
+    }
 
-
-
-
-
+    /**
+     * Cierra la conexión a la base de datos si está abierta.
+     */
+    public static void disconnect() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    /**
+     * Lee el contenido de un archivo y lo devuelve como una cadena.
+     *
+     * @param ruta La ruta del archivo a leer.
+     * @return El contenido del archivo como una cadena.
+     */
     public static String leerFichero(String ruta) {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
@@ -73,12 +142,23 @@ public class Modelo {
         }
         return sb.toString();
     }
+    /**
+     * Conecta a la base de datos utilizando Hibernate.
+     * Configura la sesión y las entidades que se utilizarán.
+     */
 
 
     public void conectar() {
         try {
+            Properties properties = HibernateUtil.loadProperties();
+            String connectionUrl = HibernateUtil.buildConnectionUrl(properties);
+
             Configuration config = new Configuration();
-            config.configure("hibernate.cfg.xml");
+            config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+            config.setProperty("hibernate.connection.url", connectionUrl);
+            config.setProperty("hibernate.connection.username", properties.getProperty("hibernate.connection.user"));
+            config.setProperty("hibernate.connection.password", properties.getProperty("hibernate.connection.pass"));
+
             config.addAnnotatedClass(Entrenador.class);
             config.addAnnotatedClass(Gimnasio.class);
             config.addAnnotatedClass(Peleador.class);
@@ -86,7 +166,6 @@ public class Modelo {
             config.addAnnotatedClass(Post.class);
             config.addAnnotatedClass(Federacion.class);
             config.addAnnotatedClass(Admin.class);
-
 
             StandardServiceRegistry ssr = new StandardServiceRegistryBuilder()
                     .applySettings(config.getProperties())
@@ -97,14 +176,23 @@ public class Modelo {
             System.err.println("Error inicializando Hibernate SessionFactory.");
         }
     }
+    /**
+     * Conecta a la base de datos utilizando JDBC para generar informes con JasperReports.
+     *
+     * @return La conexión establecida con la base de datos.
+     */
 
     private static Connection conectarJasper() {
         try {
-            return DriverManager.getConnection("jdbc:mysql://54.82.86.20:3306/nextgenmma", "tfg_api", "55NN,5&8SH,oMY7F~6v1/t0~;VH[N[G");
+            Properties properties = HibernateUtil.loadProperties();
+            return DriverManager.getConnection(HibernateUtil.buildConnectionUrl(properties),properties.getProperty("hibernate.connection.user"), properties.getProperty("hibernate.connection.pass") );
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Cierra la conexión a la base de datos y la sesión de Hibernate si están abiertas.
+     */
 
     public void desconectar() {
         if (sessionFactory != null && sessionFactory.isOpen()) {
@@ -119,6 +207,11 @@ public class Modelo {
             }
         }
     }
+    /**
+     * Obtiene una nueva sesión de Hibernate.
+     *
+     * @return La sesión de Hibernate.
+     */
 
     private Session getSession() {
         if (sessionFactory == null) {
@@ -126,6 +219,9 @@ public class Modelo {
         }
         return sessionFactory.openSession();
     }
+    /**
+     * Método para dar de alta un peleador en la base de datos.
+     */
 
     public void altaPeleador(Peleador peleador) {
         try (Session session = getSession()) {
@@ -135,6 +231,9 @@ public class Modelo {
 
         }
     }
+    /**
+     * Método para eliminar un peleador de la base de datos.
+     */
 
     public void eliminarPeleador(Peleador peleador) {
         try (Session session = getSession()) {
@@ -143,6 +242,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para modificar un peleador en la base de datos.
+     */
 
     public void modificarPeleador(Peleador peleador) {
         try (Session session = getSession()) {
@@ -151,7 +253,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
-
+    /**
+     * Método para dar de alta un entrenador en la base de datos.
+     */
     public void altaEntrenador(Entrenador entrenador) {
         try (Session session = getSession()) {
             session.beginTransaction();
@@ -159,7 +263,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
-
+    /**
+     * Método para eliminar un entrenador de la base de datos.
+     */
     public void eliminarEntrenador(Entrenador entrenador) {
         try (Session session = getSession()) {
             session.beginTransaction();
@@ -167,7 +273,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
-
+    /**
+     * Método para modificar un entrenador en la base de datos.
+     */
     public void modificarEntrenador(Entrenador entrenador) {
         try (Session session = getSession()) {
             session.beginTransaction();
@@ -175,6 +283,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para dar de alta un gimnasio en la base de datos.
+     */
 
     public void altaGimnasio(Gimnasio gimnasio) {
         try (Session session = getSession()) {
@@ -183,6 +294,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para eliminar un gimnasio de la base de datos.
+     */
 
     public void eliminarGimnasio(Gimnasio gimnasio) {
         try (Session session = getSession()) {
@@ -191,6 +305,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para modificar un gimnasio en la base de datos.
+     */
 
     public void modificarGimnasio(Gimnasio gimnasio) {
         try (Session session = getSession()) {
@@ -199,6 +316,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para dar de alta una liga en la base de datos.
+     */
 
     public void altaLiga(Liga liga) {
         try (Session session = getSession()) {
@@ -207,6 +327,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para eliminar una liga de la base de datos.
+     */
 
     public void eliminarLiga(Liga liga) {
         try (Session session = getSession()) {
@@ -215,6 +338,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para modificar una liga en la base de datos.
+     */
 
     public void modificarLiga(Liga liga) {
         try (Session session = getSession()) {
@@ -223,6 +349,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para dar de alta una federación en la base de datos.
+     */
 
     public void altaFederacion(Federacion federacion) {
         try (Session session = getSession()) {
@@ -231,6 +360,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para eliminar una federación de la base de datos.
+     */
 
     public void eliminarFederacion(Federacion federacion) {
         try (Session session = getSession()) {
@@ -239,6 +371,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para modificar una federación en la base de datos.
+     */
 
     public void modificarFederacion(Federacion federacion) {
         try (Session session = getSession()) {
@@ -247,6 +382,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para dar de alta un post en la base de datos.
+     */
 
     public void altaPost(Post post) {
         try (Session session = getSession()) {
@@ -255,6 +393,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para eliminar un post de la base de datos.
+     */
 
     public void eliminarPost(Post post) {
         try (Session session = getSession()) {
@@ -263,6 +404,9 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para modificar un post en la base de datos.
+     */
 
     public void modificarPost(Post post) {
         try (Session session = getSession()) {
@@ -271,6 +415,11 @@ public class Modelo {
             session.getTransaction().commit();
         }
     }
+    /**
+     * Método para obtener todos los gimnasios de la base de datos.
+     *
+     * @return Una lista de gimnasios.
+     */
 
     public ArrayList<Gimnasio> getGimnasios() {
         try (Session session = getSession()) {
@@ -280,6 +429,11 @@ public class Modelo {
             return gimnasios;
         }
     }
+    /**
+     * Método para obtener todos los entrenadores de la base de datos.
+     *
+     * @return Una lista de entrenadores.
+     */
 
     public ArrayList<Entrenador> getEntrenadores() {
         try (Session session = getSession()) {
@@ -289,6 +443,11 @@ public class Modelo {
             return entrenadores;
         }
     }
+    /**
+     * Método para obtener todos los peleadores de la base de datos.
+     *
+     * @return Una lista de peleadores.
+     */
 
     public ArrayList<Peleador> getPeleadores() {
         try (Session session = getSession()) {
@@ -298,6 +457,11 @@ public class Modelo {
             return peleadores;
         }
     }
+    /**
+     * Método para obtener todas las ligas de la base de datos.
+     *
+     * @return Una lista de ligas.
+     */
 
     public ArrayList<Liga> getLigas() {
         try (Session session = getSession()) {
@@ -307,6 +471,11 @@ public class Modelo {
             return ligas;
         }
     }
+    /**
+     * Método para obtener todas las federaciones de la base de datos.
+     *
+     * @return Una lista de federaciones.
+     */
 
     public ArrayList<Federacion> getFederaciones() {
         try (Session session = getSession()) {
@@ -316,6 +485,11 @@ public class Modelo {
             return federaciones;
         }
     }
+    /**
+     * Método para obtener todos los posts de la base de datos.
+     *
+     * @return Una lista de posts.
+     */
 
     public ArrayList<Post> getPosts() {
         try (Session session = getSession()) {
@@ -325,6 +499,11 @@ public class Modelo {
             return posts;
         }
     }
+    /**
+     * Método para obtener el administrador de la base de datos.
+     *
+     * @return El administrador.
+     */
     public Admin getAdmin() {
         try (Session session = getSession()) {
             session.beginTransaction();
@@ -333,6 +512,13 @@ public class Modelo {
             return admin;
         }
     }
+    /**
+     * Método para verificar la contraseña del administrador.
+     *
+     * @param admin      El administrador.
+     * @param contrasena La contraseña a verificar.
+     * @return true si la contraseña es correcta, false en caso contrario.
+     */
 
     public boolean verificarContrasena(Admin admin, String contrasena) {
 
@@ -354,6 +540,14 @@ public class Modelo {
             return false;
         }
     }
+    /**
+     * Método para verificar la contraseña del gimnasio.
+     *
+     * @param gimnasio   El gimnasio.
+     * @param contrasena La contraseña a verificar.
+     * @return true si la contraseña es correcta, false en caso contrario.
+     */
+
     public boolean verificarContrasenaGimnasio(Gimnasio gimnasio, String contrasena) {
         try (Session session = getSession()) {
             session.beginTransaction();
@@ -373,6 +567,12 @@ public class Modelo {
             return false;
         }
     }
+    /**
+     * Método para enviar un correo electrónico con la información de un peleador.
+     *
+     * @param peleador El peleador del que se enviará la información.
+     * @param asunto   El asunto del correo.
+     */
 
     public void enviarCorreo(Peleador peleador, String asunto) {
         String host = "smtp.gmail.com";
@@ -394,7 +594,7 @@ public class Modelo {
         });
 
         try {
-            // Crear el contenido HTML del mensaje
+
             String contenido = "<!DOCTYPE html>" +
                     "<html>" +
                     "<head>" +
@@ -441,20 +641,25 @@ public class Modelo {
                     "</body>" +
                     "</html>";
 
-            // Crear el mensaje
+
             Message mensaje = new MimeMessage(session);
             mensaje.setFrom(new InternetAddress(remitente));
             mensaje.setRecipients(Message.RecipientType.TO, InternetAddress.parse("diegogilzg@gmail.com"));
             mensaje.setSubject(asunto);
             mensaje.setContent(contenido, "text/html; charset=utf-8");
 
-            // Enviar el mensaje
+
             Transport.send(mensaje);
             System.out.println("Correo enviado exitosamente.");
         } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
+    /**
+     * Método para generar un informe de peleadores utilizando JasperReports.
+     *
+     * @return El informe generado.
+     */
 
     public JasperPrint generarPeleadores() {
         try {
@@ -464,6 +669,11 @@ public class Modelo {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Método para generar un informe de entrenadores utilizando JasperReports.
+     *
+     * @return El informe generado.
+     */
     public JasperPrint generarEntrenadores() {
         try {
             conexion = conectarJasper();
@@ -472,6 +682,11 @@ public class Modelo {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Método para generar un informe de gimnasios utilizando JasperReports.
+     *
+     * @return El informe generado.
+     */
     public JasperPrint generarGimnasios() {
         try {
             conexion = conectarJasper();
@@ -480,6 +695,12 @@ public class Modelo {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Método para generar un informe de ligas utilizando JasperReports.
+     *
+     * @return El informe generado.
+     */
     public JasperPrint generarLigas() {
         try {
             conexion = conectarJasper();
@@ -488,6 +709,26 @@ public class Modelo {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Método para generar un informe de peleadores en una liga utilizando JasperReports.
+     *
+     * @return El informe generado.
+     */
+    public JasperPrint generarRecuentoLigas() {
+        try {
+            conexion = conectarJasper();
+            return JasperFillManager.fillReport(JASPER_PELADORESLIGA, null, conexion);
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /**
+     * Método para generar un informe de peleadores en un gimnasio utilizando JasperReports.
+     *
+     * @return El informe generado.
+     */
+
+
     public static JasperPrint generarPeleadoresLiga(Liga liga){
 
         try {
@@ -500,6 +741,11 @@ public class Modelo {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Método para generar un informe de peleadores en un gimnasio utilizando JasperReports.
+     *
+     * @return El informe generado.
+     */
     public static JasperPrint generarPeleadoresGimnasio(Gimnasio gimnasio){
 
         try {
@@ -512,6 +758,11 @@ public class Modelo {
             throw new RuntimeException(e);
         }
     }
+    /**
+     * Método para generar un informe de peleadores en una liga utilizando JasperReports.
+     *
+     * @return El informe generado.
+     */
     public int peleadoresActivos(Gimnasio gimnasio) {
         try (Session session = getSession()) {
             Long count = (Long) session.createQuery("SELECT COUNT(p) FROM Peleador p WHERE p.gimnasio.idGimnasio = :idGimnasio")

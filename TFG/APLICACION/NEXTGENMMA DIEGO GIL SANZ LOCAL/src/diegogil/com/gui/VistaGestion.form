@@ -327,7 +327,7 @@
                   <forms top="0" left="10" bottom="0" right="0"/>
                 </constraints>
                 <properties>
-                  <text value="NIF"/>
+                  <text value="CIF"/>
                 </properties>
               </component>
               <component id="20c2b" class="javax.swing.JLabel">

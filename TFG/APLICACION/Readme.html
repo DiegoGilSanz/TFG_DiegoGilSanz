@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NEXTGENMMA - Manual de Usuario</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1, h2, h3 {
+      color: #00ffae;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    section {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 10px rgba(0, 255, 174, 0.2);
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    ul li {
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      border-bottom: 1px solid #00ffae;
+      padding-bottom: 5px;
+      margin-bottom: 15px;
+    }
+
+    .warning {
+      color: #ff6b6b;
+    }
+    a{color: #ffd700;}
+
+    .important {
+      font-weight: bold;
+      color: #ffd700;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>NEXTGENMMA - MANUAL DE USUARIO</h1>
+
+  <section>
+    <h2 class="section-title">Pasos de Instalación</h2>
+    <ul>
+      <li>1º &rarr; Descargar el proyecto</li>
+      <li class="important">Si va a usar la versión de servidor, por favor contacte con: <a href="mailto:diegogilzg@gmail.com">diegogilzg@gmail.com</a> y pase al último paso</li>
+      <li>2º &rarr; (Versión local) Configurar el archivo <code>.properties</code> del proyecto</li>
+      <li>3º &rarr; Ejecutar el archivo JAR y disfrutar de la gestión de su federación o gimnasio</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="section-title">Inserción de Datos</h2>
+
+    <h3>-- Peleador --</h3>
+    <p><span class="important">Requisitos:</span></p>
+    <ul>
+      <li>Nombre, Apellido, DNI, Peso, Victorias, Apodo, Entrenador, Gimnasio, Liga</li>
+    </ul>
+    <p><span class="important">Campos:</span></p>
+    <ul>
+      <li>Nombre y Apellido: hasta 250 caracteres. Exceso será recortado y se mostrará advertencia</li>
+      <li>DNI: hasta 15 caracteres</li>
+      <li>Peso y Victorias: valores numéricos</li>
+      <li>Apodo: hasta 250 caracteres</li>
+      <li>Debe seleccionar Gimnasio, Entrenador y Liga (si aplica)</li>
+    </ul>
+
+    <h3>-- Gimnasio --</h3>
+    <p><span class="important">Requisitos:</span> Nombre, Contraseña, CIF, Dirección, Web, Ciudad</p>
+    <p><span class="important">Campos:</span></p>
+    <ul>
+      <li>Nombre y Contraseña: hasta 250 caracteres (Contraseña está hasheada)</li>
+      <li>CIF: sin letra</li>
+      <li>Dirección: debe ser exacta</li>
+      <li>Web: del club</li>
+      <li>Ciudad: donde se ubica el club</li>
+    </ul>
+
+    <h3>-- Entrenador --</h3>
+    <p><span class="important">Requisitos:</span> Nombre, Apellido, DNI, Experiencia, Nº Colegiado, Gimnasio</p>
+    <p><span class="important">Campos:</span></p>
+    <ul>
+      <li>Nombre y Apellido: hasta 250 caracteres</li>
+      <li>DNI: hasta 15 caracteres</li>
+      <li>Experiencia: en años (número entero)</li>
+      <li>Nº Colegiado: debe coincidir con la cartilla</li>
+      <li>Debe seleccionar Gimnasio</li>
+    </ul>
+
+    <h3>-- Liga --</h3>
+    <p><span class="important">Requisitos:</span> Nombre, Ciudad, Participantes, Federación</p>
+    <p><span class="important">Campos:</span></p>
+    <ul>
+      <li>Nombre: hasta 250 caracteres</li>
+      <li>Ciudad: ubicación de la promotora</li>
+      <li>Participantes: cantidad estimada</li>
+      <li>Federación: debe estar seleccionada</li>
+    </ul>
+
+    <h3>-- Federación --</h3>
+    <p><span class="important">Requisitos:</span> Nombre, Arte marcial, Fecha fundación, Nº Asociación</p>
+    <p><span class="important">Campos:</span></p>
+    <ul>
+      <li>Nombre: hasta 250 caracteres</li>
+      <li>Arte Marcial: obligatoria</li>
+      <li>Fecha de fundación: con calendario</li>
+      <li>Nº Asociación: debe coincidir con el registro</li>
+    </ul>
+
+    <h3>-- Post --</h3>
+    <p><span class="important">Requisitos:</span> Título, Mensaje, Imagen (opcional)</p>
+    <p><span class="important">Campos:</span></p>
+    <ul>
+      <li>Título: encabezado del post</li>
+      <li>Mensaje: contenido informativo</li>
+      <li>Imagen: no debe ser de gran resolución</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="section-title">Envío de Correo</h2>
+    <p><span class="important">Requisitos:</span> Asunto, Nombre, Apellido, DNI, Peso, Victorias, Apodo, Nacimiento, Gimnasio, Entrenador, Liga</p>
+    <p><span class="important">Campos:</span></p>
+    <ul>
+      <li>Asunto: describe la intención del mensaje</li>
+      <li>Nombre y Apellido: hasta 250 caracteres</li>
+      <li>DNI: hasta 15 caracteres</li>
+      <li>Peso y Victorias: valores numéricos</li>
+      <li>Apodo: hasta 250 caracteres</li>
+      <li>Debe seleccionar Gimnasio, Entrenador y Liga</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="section-title">Informes</h2>
+    <p>El administrador podrá ver los siguientes informes:</p>
+    <ul>
+      <li>Peleadores</li>
+      <li>Gimnasios</li>
+      <li>Entrenadores</li>
+      <li>Ligas</li>
+      <li>Peleadores por liga</li>
+      <li>Peleadores por gimnasio</li>
+    </ul>
+    <p><span class="important">Cada gimnasio podrá ver sus propios peleadores listados y contados.</span></p>
+  </section>
+
+</body>
+</html>

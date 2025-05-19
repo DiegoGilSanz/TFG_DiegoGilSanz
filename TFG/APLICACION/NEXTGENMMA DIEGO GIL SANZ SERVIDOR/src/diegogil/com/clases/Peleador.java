@@ -107,7 +107,7 @@ public class Peleador {
 
     @Override
     public String toString() {
-        return "Peleador" + nombre + '\'' +
+        return "Peleador " + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
                 ", dni='" + dni + '\'' +
                 ", peso=" + peso ;

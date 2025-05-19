@@ -9,6 +9,11 @@ public class VistaLoginAdmin extends JFrame{
      JMenuBar menuBar1;
      JMenu menu1;
      public JMenuItem inicio3;
+     public JMenuItem informacion3;
+     public JMenuItem salir3;
+        /**
+        * Constructor de la clase VistaLoginAdmin
+        */
 
      public VistaLoginAdmin() {
           setContentPane(panel1);
@@ -22,11 +27,19 @@ public class VistaLoginAdmin extends JFrame{
 
 
      }
+        /**
+        * Metodo que crea el menu de la ventana
+        */
      private void crearMenu() {
           menuBar1 = new JMenuBar();
           menu1 = new JMenu("Menu");
+            menu1.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 15));
+            menu1.setBounds(100, 80, 100, 30);
           inicio3 = new JMenuItem("Inicio");
-
+          salir3 = new JMenuItem("Salir");
+            informacion3 = new JMenuItem("Informacion");
+            menu1.add(informacion3);
+            menu1.add(salir3);
           menu1.add(inicio3);
           menuBar1.add(menu1);
           setJMenuBar(menuBar1);

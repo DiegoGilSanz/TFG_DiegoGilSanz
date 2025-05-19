@@ -83,7 +83,9 @@ public class VistaGestion extends JFrame{
      public byte[] postImagenSeleccionada;
      JMenuBar menuBar1;
         JMenu menu1;
+      public JMenuItem informacion;
      public JMenuItem inicio;
+        public JMenuItem salir;
 
      public VistaGestion() {
 
@@ -122,7 +124,14 @@ public class VistaGestion extends JFrame{
      private void crearMenu() {
           menuBar1 = new JMenuBar();
           menu1 = new JMenu("Menu");
+            menu1.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 15));
+            menu1.setBounds(100, 80, 100, 30);
           inicio = new JMenuItem("Inicio");
+            salir = new JMenuItem("Salir");
+            menu1.add(salir);
+          informacion = new JMenuItem("Informacion");
+            menu1.add(informacion);
+
 
           menu1.add(inicio);
           menuBar1.add(menu1);

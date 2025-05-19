@@ -13,6 +13,9 @@ public class VistaLoginGimnasio extends JFrame {
     public JMenuItem inicio4;
     public JMenuItem informacion4;
     public JMenuItem salir4;
+    /**
+     * Constructor de la clase VistaLoginGimnasio
+     */
     public VistaLoginGimnasio() {
         setContentPane(panel1);
         setTitle("Login Gimnasio");
@@ -25,6 +28,9 @@ public class VistaLoginGimnasio extends JFrame {
 
 
     }
+    /**
+     * Metodo que crea el menu de la ventana
+     */
     private void crearMenu() {
         menuBar1 = new JMenuBar();
         menu1 = new JMenu("Menu");
