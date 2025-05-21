@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 /**
  * Clase Controlador que implementa la lógica de la aplicación.
@@ -107,6 +108,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 Admin admin=modelo.getAdmin();
                 if (modelo.verificarContrasena(admin,hashGimnasioContraseñaLoginAdmin)) {
                     vistaLoginAdmin.setVisible(false);
+                    vistaLoginAdmin.administradorContraseñaTxt.setText("");
                     actualizarListas();
                     actualizarCombos();
                     vistaGestion.pack();
@@ -121,8 +123,12 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 hashGimnasioContraseñaLogin = DigestUtils.sha256Hex(vistaLoginGimnasio.loginGimnasioContraseñaTxt.getText());
                 if (modelo.verificarContrasenaGimnasio((Gimnasio) vistaLoginGimnasio.loginGimnasioCombo.getSelectedItem(), hashGimnasioContraseñaLogin)) {
                     vistaLoginGimnasio.setVisible(false);
-
+                    vistaLoginGimnasio.loginGimnasioContraseñaTxt.setText("");
                     vistaGimnasio.setVisible(true);
+                    comboInformesGimnasio();
+                    comboInformesLiga();
+                    comboGimnasioEntrenador();
+
                     vistaGimnasio.solicitudPeleadoresActivosTxt.setText(String.valueOf(modelo.peleadoresActivos((Gimnasio) vistaLoginGimnasio.loginGimnasioCombo.getSelectedItem())));
 
 
@@ -269,6 +275,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         comboPeleadorLiga();
                         comboInformesLiga();
                         validarCamposLiga();
+                        vaciarCamposLiga();
                     }
                 }
                 break;
@@ -278,6 +285,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         modelo.eliminarLiga((Liga) vistaGestion.ligaLista.getSelectedValue());
                         comboPeleadorLiga();
                         comboInformesLiga();
+                        vaciarCamposLiga();
                         listarLigas(modelo.getLigas());
 
                     } catch (Exception ex) {
@@ -302,6 +310,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                         listarLigas(modelo.getLigas());
                         comboPeleadorLiga();
                         comboInformesLiga();
+                        vaciarCamposLiga();
                         validarCamposLiga();
                     }
                     } catch (Exception ex) {
@@ -427,6 +436,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                     try {
 
                         modelo.eliminarFederacion((Federacion) vistaGestion.federacionLista.getSelectedValue());
+                        listarFederaciones(modelo.getFederaciones());
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(vistaGestion, "No se puede eliminar la federación porque tiene ligas asociadas o no existen federaciones.", "Error", JOptionPane.ERROR_MESSAGE);
 
@@ -681,6 +691,10 @@ public class Controlador implements ActionListener, ListSelectionListener {
             JOptionPane.showMessageDialog(vistaGestion, "El número de victorias debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        if(LocalDate.parse(vistaGestion.peleadorNacimientoTxt.getDate().toString()).isAfter(LocalDate.now()) ){
+            JOptionPane.showMessageDialog(vistaGestion, "La fecha de nacimiento no puede ser futura.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
 
         return true;
     }
@@ -823,8 +837,11 @@ public class Controlador implements ActionListener, ListSelectionListener {
             JOptionPane.showMessageDialog(vistaGestion, "El número de asociación debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        if (LocalDate.parse(vistaGestion.federacionAñoFundacionTxt.getDate().toString()).isAfter(LocalDate.now())   ) {
 
-        // Validar fecha de fundación
+            JOptionPane.showMessageDialog(vistaGestion, "La fecha no puede ser posterior", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
 
 
         return true;
