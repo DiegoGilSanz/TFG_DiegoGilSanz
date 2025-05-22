@@ -1,4 +1,4 @@
-package diegogil.com.MC;
+package diegogil.com.mc;
 
 import diegogil.com.clases.*;
 import diegogil.com.gui.*;

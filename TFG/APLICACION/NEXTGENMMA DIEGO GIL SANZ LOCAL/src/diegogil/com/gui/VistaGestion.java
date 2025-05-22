@@ -138,5 +138,10 @@ public class VistaGestion extends JFrame{
           setJMenuBar(menuBar1);
 
      }
+     private void cambiarIcono(){
+            ImageIcon icono = new ImageIcon("src/diegogil/com/iconoNextGenMma.png");
+            setIconImage(icono.getImage());
+
+     }
 
 }

@@ -1,7 +1,7 @@
 package diegogil.com;
 
-import diegogil.com.MC.Controlador;
-import diegogil.com.MC.Modelo;
+import diegogil.com.mc.Controlador;
+import diegogil.com.mc.Modelo;
 import diegogil.com.gui.*;
 
 public class Main {
