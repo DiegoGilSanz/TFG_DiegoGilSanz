@@ -125,9 +125,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                     vistaLoginGimnasio.setVisible(false);
                     vistaLoginGimnasio.loginGimnasioContraseñaTxt.setText("");
                     vistaGimnasio.setVisible(true);
-                    comboInformesGimnasio();
-                    comboInformesLiga();
-                    comboGimnasioEntrenador();
+                    actualizarCombos();
 
                     vistaGimnasio.solicitudPeleadoresActivosTxt.setText(String.valueOf(modelo.peleadoresActivos((Gimnasio) vistaLoginGimnasio.loginGimnasioCombo.getSelectedItem())));
 
@@ -463,21 +461,28 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 }
                 break;
             case "enviar":
-                Peleador peleadorEnviar = new Peleador();
+                if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres añadir este peleador?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    if (validarCamposCorreoPeleador()) {
 
-                peleadorEnviar.setNombre(vistaGimnasio.solicitudNombreTxt.getText());
-                peleadorEnviar.setApellido(vistaGimnasio.solicitudApellidoTxt.getText());
-                peleadorEnviar.setDni(vistaGimnasio.solicitudDniTxt.getText());
-                peleadorEnviar.setPeso(Integer.parseInt(vistaGimnasio.solicitudPesoTxt.getText()));
-                peleadorEnviar.setVictorias(Integer.parseInt(vistaGimnasio.solicitudVictoriasTxt.getText()));
-                peleadorEnviar.setApodo(vistaGimnasio.solicitudApodoTxt.getText());
-                peleadorEnviar.setFechaNacimiento(Date.valueOf(vistaGimnasio.solicitudNacimientoTxt.getDate()));
-                peleadorEnviar.setGimnasio((Gimnasio) vistaGimnasio.solicitudGimnasioCombo.getSelectedItem());
-                peleadorEnviar.setEntrenador((Entrenador) vistaGimnasio.solicitudEntrenadorCombo.getSelectedItem());
-                peleadorEnviar.setLiga((Liga) vistaGimnasio.solicitudLigaCombo.getSelectedItem());
+                        Peleador peleadorEnviar = new Peleador();
+
+                        peleadorEnviar.setNombre(vistaGimnasio.solicitudNombreTxt.getText());
+                        peleadorEnviar.setApellido(vistaGimnasio.solicitudApellidoTxt.getText());
+                        peleadorEnviar.setDni(vistaGimnasio.solicitudDniTxt.getText());
+                        peleadorEnviar.setPeso(Integer.parseInt(vistaGimnasio.solicitudPesoTxt.getText()));
+                        peleadorEnviar.setVictorias(Integer.parseInt(vistaGimnasio.solicitudVictoriasTxt.getText()));
+                        peleadorEnviar.setApodo(vistaGimnasio.solicitudApodoTxt.getText());
+                        peleadorEnviar.setFechaNacimiento(Date.valueOf(vistaGimnasio.solicitudNacimientoTxt.getDate()));
+                        peleadorEnviar.setGimnasio((Gimnasio) vistaGimnasio.solicitudGimnasioCombo.getSelectedItem());
+                        peleadorEnviar.setEntrenador((Entrenador) vistaGimnasio.solicitudEntrenadorCombo.getSelectedItem());
+                        peleadorEnviar.setLiga((Liga) vistaGimnasio.solicitudLigaCombo.getSelectedItem());
 
 
-                modelo.enviarCorreo(peleadorEnviar, vistaGimnasio.solicitudAsuntoTxt.getText());
+                        modelo.enviarCorreo(peleadorEnviar, vistaGimnasio.solicitudAsuntoTxt.getText());
+                    }
+                }
+                vaciarCamposCorreoPeleador();
+
                 break;
             case "inicio":
                 vistaGestion.setVisible(false);
@@ -630,13 +635,14 @@ public class Controlador implements ActionListener, ListSelectionListener {
         vistaGestion.postMensajeTxt.setText("");
         vistaGestion.postImagenSeleccionada = null;
     }
+
     /**
      * Método para validar los campos del formulario de peleador.
      *
      * @return true si los campos son válidos, false en caso contrario.
      */
     private boolean validarCamposPeleador() {
-        // Validar campos vacíos
+
         if (vistaGestion.peleadorNombreTxt.getText().isEmpty() ||
                 vistaGestion.peleadorApellidoTxt.getText().isEmpty() ||
                 vistaGestion.peleadorDniTxt.getText().isEmpty() ||
@@ -698,6 +704,23 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
         return true;
     }
+    /**
+     * Método para vaciar los campos del formulario de envío de correo de peleador.
+     */
+    private void vaciarCamposCorreoPeleador() {
+        vistaGimnasio.solicitudNombreTxt.setText("");
+        vistaGimnasio.solicitudApellidoTxt.setText("");
+        vistaGimnasio.solicitudDniTxt.setText("");
+        vistaGimnasio.solicitudPesoTxt.setText("");
+        vistaGimnasio.solicitudVictoriasTxt.setText("");
+        vistaGimnasio.solicitudApodoTxt.setText("");
+        vistaGimnasio.solicitudNacimientoTxt.setDate(null);
+        vistaGimnasio.solicitudGimnasioCombo.setSelectedItem(null);
+        vistaGimnasio.solicitudEntrenadorCombo.setSelectedItem(null);
+        vistaGimnasio.solicitudLigaCombo.setSelectedItem(null);
+        vistaGimnasio.solicitudAsuntoTxt.setText("");
+    }
+
     /**
      * Método para validar los campos del formulario de gimnasio.
      *
@@ -895,8 +918,8 @@ private boolean validarCamposGimnasio() {
     }
 
     // Validar longitud mínima de contraseña
-    if (vistaGestion.gimnasioContraseñaTxt.getText().length() < 8) {
-        JOptionPane.showMessageDialog(vistaGestion, "La contraseña debe tener al menos 8 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+    if (vistaGestion.gimnasioContraseñaTxt.getText().length() < 4 || vistaGestion.gimnasioContraseñaTxt.getText().length() > 20) {
+        JOptionPane.showMessageDialog(vistaGestion, "La contraseña debe tener al menos 4 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
         return false;
     }
 
@@ -913,6 +936,90 @@ private boolean validarCamposGimnasio() {
             JOptionPane.showMessageDialog(vistaGestion, "El título y el mensaje del post son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        return true;
+    }
+    /**
+     * Método para validar los campos del formulario de envío de correo de peleador.
+     *
+     * @return true si los campos son válidos, false en caso contrario.
+     */
+    private boolean validarCamposCorreoPeleador() {
+        // Validar campos vacíos
+        if (vistaGimnasio.solicitudNombreTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudApellidoTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudDniTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudPesoTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudVictoriasTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudApodoTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudNacimientoTxt.getDate() == null ||
+                vistaGimnasio.solicitudGimnasioCombo.getSelectedItem() == null ||
+                vistaGimnasio.solicitudEntrenadorCombo.getSelectedItem() == null ||
+                vistaGimnasio.solicitudLigaCombo.getSelectedItem() == null ||
+                vistaGimnasio.solicitudAsuntoTxt.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar longitud de nombre
+        if (vistaGimnasio.solicitudNombreTxt.getText().length() > 50) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El nombre no puede exceder 50 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar longitud de apellido
+        if (vistaGimnasio.solicitudApellidoTxt.getText().length() > 50) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El apellido no puede exceder 50 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar longitud de apodo
+        if (vistaGimnasio.solicitudApodoTxt.getText().length() > 30) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El apodo no puede exceder 30 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar longitud de DNI
+        if (vistaGimnasio.solicitudDniTxt.getText().length() > 15) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El DNI no puede exceder 15 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar peso
+        try {
+            int peso = Integer.parseInt(vistaGimnasio.solicitudPesoTxt.getText());
+            if (peso <= 0) {
+                JOptionPane.showMessageDialog(vistaGimnasio, "El peso debe ser mayor a 0.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El peso debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar victorias
+        try {
+            int victorias = Integer.parseInt(vistaGimnasio.solicitudVictoriasTxt.getText());
+            if (victorias < 0) {
+                JOptionPane.showMessageDialog(vistaGimnasio, "El número de victorias no puede ser negativo.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El número de victorias debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar fecha de nacimiento
+        if (LocalDate.parse(vistaGimnasio.solicitudNacimientoTxt.getDate().toString()).isAfter(LocalDate.now())) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "La fecha de nacimiento no puede ser futura.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar longitud de asunto
+        if (vistaGimnasio.solicitudAsuntoTxt.getText().length() > 100) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El asunto no puede exceder 100 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         return true;
     }
     /**

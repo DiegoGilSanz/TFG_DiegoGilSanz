@@ -895,7 +895,7 @@ private boolean validarCamposGimnasio() {
     }
 
     // Validar longitud mínima de contraseña
-    if (vistaGestion.gimnasioContraseñaTxt.getText().length() < 8) {
+    if (vistaGestion.gimnasioContraseñaTxt.getText().length() < 4 || vistaGestion.gimnasioContraseñaTxt.getText().length() > 20){
         JOptionPane.showMessageDialog(vistaGestion, "La contraseña debe tener al menos 8 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
         return false;
     }
