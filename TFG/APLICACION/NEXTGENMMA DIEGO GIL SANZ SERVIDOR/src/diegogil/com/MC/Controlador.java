@@ -125,9 +125,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                     vistaLoginGimnasio.setVisible(false);
                     vistaLoginGimnasio.loginGimnasioContraseñaTxt.setText("");
                     vistaGimnasio.setVisible(true);
-                    comboInformesGimnasio();
-                    comboInformesLiga();
-                    comboGimnasioEntrenador();
+                    actualizarCombos();
 
                     vistaGimnasio.solicitudPeleadoresActivosTxt.setText(String.valueOf(modelo.peleadoresActivos((Gimnasio) vistaLoginGimnasio.loginGimnasioCombo.getSelectedItem())));
 
@@ -174,21 +172,21 @@ public class Controlador implements ActionListener, ListSelectionListener {
             case "modificar peleador":
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres modificar este peleador?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     try {
-                    if (validarCamposPeleador()) {
-                        Peleador peleadorModificar = (Peleador) vistaGestion.peleadorLista.getSelectedValue();
-                        peleadorModificar.setNombre(vistaGestion.peleadorNombreTxt.getText());
-                        peleadorModificar.setApellido(vistaGestion.peleadorApellidoTxt.getText());
-                        peleadorModificar.setDni(vistaGestion.peleadorDniTxt.getText());
-                        peleadorModificar.setPeso(Integer.parseInt(vistaGestion.peleadorPesoTxt.getText()));
-                        peleadorModificar.setVictorias(Integer.parseInt(vistaGestion.peleadorVictoriasTxt.getText()));
-                        peleadorModificar.setApodo(vistaGestion.peleadorApodoTxt.getText());
-                        peleadorModificar.setGimnasio((Gimnasio) vistaGestion.peleadorGimnasioCombo.getSelectedItem());
-                        peleadorModificar.setEntrenador((Entrenador) vistaGestion.peleadorEntrenadorCombo.getSelectedItem());
-                        peleadorModificar.setLiga((Liga) vistaGestion.peleadorLigaCombo.getSelectedItem());
-                        modelo.modificarPeleador(peleadorModificar);
-                        listarPeleadores(modelo.getPeleadores());
-                        vaciarCamposPeleador();
-                    }
+                        if (validarCamposPeleador()) {
+                            Peleador peleadorModificar = (Peleador) vistaGestion.peleadorLista.getSelectedValue();
+                            peleadorModificar.setNombre(vistaGestion.peleadorNombreTxt.getText());
+                            peleadorModificar.setApellido(vistaGestion.peleadorApellidoTxt.getText());
+                            peleadorModificar.setDni(vistaGestion.peleadorDniTxt.getText());
+                            peleadorModificar.setPeso(Integer.parseInt(vistaGestion.peleadorPesoTxt.getText()));
+                            peleadorModificar.setVictorias(Integer.parseInt(vistaGestion.peleadorVictoriasTxt.getText()));
+                            peleadorModificar.setApodo(vistaGestion.peleadorApodoTxt.getText());
+                            peleadorModificar.setGimnasio((Gimnasio) vistaGestion.peleadorGimnasioCombo.getSelectedItem());
+                            peleadorModificar.setEntrenador((Entrenador) vistaGestion.peleadorEntrenadorCombo.getSelectedItem());
+                            peleadorModificar.setLiga((Liga) vistaGestion.peleadorLigaCombo.getSelectedItem());
+                            modelo.modificarPeleador(peleadorModificar);
+                            listarPeleadores(modelo.getPeleadores());
+                            vaciarCamposPeleador();
+                        }
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar el peleador porque no existe o no esta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -235,28 +233,28 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 break;
             case "modificar gimnasio":
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres modificar este gimnasio?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                   try {
+                    try {
 
 
-                    String hash;
-                    if (validarCamposGimnasio()) {
-                        Gimnasio gimnasioModificar = (Gimnasio) vistaGestion.gimnasioLista.getSelectedValue();
-                        gimnasioModificar.setNombre(vistaGestion.gimnasioNombreTxt.getText());
-                        gimnasioModificar.setDireccion(vistaGestion.gimnasioDireccionTxt.getText());
-                        gimnasioModificar.setCiudad(vistaGestion.gimnasioCiudadTxt.getText());
-                        hash = DigestUtils.sha256Hex(vistaGestion.gimnasioContraseñaTxt.getText());
-                        gimnasioModificar.setContraseña(hash);
-                        gimnasioModificar.setNif(vistaGestion.gimnasioNifTxt.getText());
-                        gimnasioModificar.setWeb(vistaGestion.gimnasioWebTxt.getText());
-                        modelo.modificarGimnasio(gimnasioModificar);
-                        listarGimnasios(modelo.getGimnasios());
-                        comboPeleadorGimnasio();
-                        comboEntrenadorGimnasio();
-                        comboInformesGimnasio();
-                        comboGimnasioLogin();
-                        vaciarCamposGimnasio();
-                    }
-                   } catch (Exception ex) {
+                        String hash;
+                        if (validarCamposGimnasio()) {
+                            Gimnasio gimnasioModificar = (Gimnasio) vistaGestion.gimnasioLista.getSelectedValue();
+                            gimnasioModificar.setNombre(vistaGestion.gimnasioNombreTxt.getText());
+                            gimnasioModificar.setDireccion(vistaGestion.gimnasioDireccionTxt.getText());
+                            gimnasioModificar.setCiudad(vistaGestion.gimnasioCiudadTxt.getText());
+                            hash = DigestUtils.sha256Hex(vistaGestion.gimnasioContraseñaTxt.getText());
+                            gimnasioModificar.setContraseña(hash);
+                            gimnasioModificar.setNif(vistaGestion.gimnasioNifTxt.getText());
+                            gimnasioModificar.setWeb(vistaGestion.gimnasioWebTxt.getText());
+                            modelo.modificarGimnasio(gimnasioModificar);
+                            listarGimnasios(modelo.getGimnasios());
+                            comboPeleadorGimnasio();
+                            comboEntrenadorGimnasio();
+                            comboInformesGimnasio();
+                            comboGimnasioLogin();
+                            vaciarCamposGimnasio();
+                        }
+                    } catch (Exception ex) {
                         JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar el gimnasio porque no existe o no esta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -300,19 +298,19 @@ public class Controlador implements ActionListener, ListSelectionListener {
                     try {
 
 
-                    if (validarCamposLiga()) {
-                        Liga ligaModificar = (Liga) vistaGestion.ligaLista.getSelectedValue();
-                        ligaModificar.setNombre(vistaGestion.ligaNombreTxt.getText());
-                        ligaModificar.setCiudad(vistaGestion.ligaCiudadTxt.getText());
-                        ligaModificar.setParticipantes(Integer.parseInt(vistaGestion.ligaParticipantesTxt.getText()));
-                        ligaModificar.setFederacion((Federacion) vistaGestion.ligaFederacionCombo.getSelectedItem());
-                        modelo.modificarLiga(ligaModificar);
-                        listarLigas(modelo.getLigas());
-                        comboPeleadorLiga();
-                        comboInformesLiga();
-                        vaciarCamposLiga();
-                        validarCamposLiga();
-                    }
+                        if (validarCamposLiga()) {
+                            Liga ligaModificar = (Liga) vistaGestion.ligaLista.getSelectedValue();
+                            ligaModificar.setNombre(vistaGestion.ligaNombreTxt.getText());
+                            ligaModificar.setCiudad(vistaGestion.ligaCiudadTxt.getText());
+                            ligaModificar.setParticipantes(Integer.parseInt(vistaGestion.ligaParticipantesTxt.getText()));
+                            ligaModificar.setFederacion((Federacion) vistaGestion.ligaFederacionCombo.getSelectedItem());
+                            modelo.modificarLiga(ligaModificar);
+                            listarLigas(modelo.getLigas());
+                            comboPeleadorLiga();
+                            comboInformesLiga();
+                            vaciarCamposLiga();
+                            validarCamposLiga();
+                        }
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar la liga porque no existe o no esta seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -350,20 +348,20 @@ public class Controlador implements ActionListener, ListSelectionListener {
             case "modificar entrenador":
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres modificar este entrenador?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     try {
-                    if (validarCamposEntrenador()) {
-                        Entrenador entrenadorModificar = (Entrenador) vistaGestion.entradorLista.getSelectedValue();
-                        entrenadorModificar.setNombre(vistaGestion.entrenadorNombreTxt.getText());
-                        entrenadorModificar.setApellido(vistaGestion.entrenadorApellidoTxt.getText());
-                        entrenadorModificar.setDni(vistaGestion.entrenadorDniTxt.getText());
-                        entrenadorModificar.setNumeroColegiado(Integer.parseInt(vistaGestion.entrenadorColegiadoTxt.getText()));
-                        entrenadorModificar.setExperiencia(Integer.parseInt(vistaGestion.entrenadorExperienciaTxt.getText()));
-                        entrenadorModificar.setGimnasio((Gimnasio) vistaGestion.entrenadorGimnasioCombo.getSelectedItem());
-                        modelo.modificarEntrenador(entrenadorModificar);
-                        listarEntrenadores(modelo.getEntrenadores());
-                        comboPeleadorEntrenador();
-                        vaciarCamposEntrenador();
+                        if (validarCamposEntrenador()) {
+                            Entrenador entrenadorModificar = (Entrenador) vistaGestion.entradorLista.getSelectedValue();
+                            entrenadorModificar.setNombre(vistaGestion.entrenadorNombreTxt.getText());
+                            entrenadorModificar.setApellido(vistaGestion.entrenadorApellidoTxt.getText());
+                            entrenadorModificar.setDni(vistaGestion.entrenadorDniTxt.getText());
+                            entrenadorModificar.setNumeroColegiado(Integer.parseInt(vistaGestion.entrenadorColegiadoTxt.getText()));
+                            entrenadorModificar.setExperiencia(Integer.parseInt(vistaGestion.entrenadorExperienciaTxt.getText()));
+                            entrenadorModificar.setGimnasio((Gimnasio) vistaGestion.entrenadorGimnasioCombo.getSelectedItem());
+                            modelo.modificarEntrenador(entrenadorModificar);
+                            listarEntrenadores(modelo.getEntrenadores());
+                            comboPeleadorEntrenador();
+                            vaciarCamposEntrenador();
 
-                    }
+                        }
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar el entrenador porque no existe o no esta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -372,7 +370,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
                 break;
             case "adjuntar imagen":
-              adjuntarImagen();
+                adjuntarImagen();
                 break;
             case "insertar post":
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres insertar este post?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
@@ -401,18 +399,18 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 break;
             case "modificar post":
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres modificar este post?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                     try{
-                    if (validarCamposPost()) {
-                        Post postModificar = (Post) vistaGestion.postLista.getSelectedValue();
-                        postModificar.setTitulo(vistaGestion.postTituloTxt.getText());
-                        postModificar.setMensaje(vistaGestion.postMensajeTxt.getText());
-                        modelo.modificarPost(postModificar);
-                        listarPosts(modelo.getPosts());
-                        vaciarCamposPost();
-                    }
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar el post porque no existe o no esta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
+                    try{
+                        if (validarCamposPost()) {
+                            Post postModificar = (Post) vistaGestion.postLista.getSelectedValue();
+                            postModificar.setTitulo(vistaGestion.postTituloTxt.getText());
+                            postModificar.setMensaje(vistaGestion.postMensajeTxt.getText());
+                            modelo.modificarPost(postModificar);
+                            listarPosts(modelo.getPosts());
+                            vaciarCamposPost();
                         }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar el post porque no existe o no esta seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 break;
             case "insertar federacion":
@@ -446,38 +444,45 @@ public class Controlador implements ActionListener, ListSelectionListener {
             case "modificar federacion":
                 if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres modificar esta federación?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     try {
-                    if (validarCamposFederacion()) {
-                        Federacion federacionModificar = (Federacion) vistaGestion.federacionLista.getSelectedValue();
-                        federacionModificar.setNombre(vistaGestion.federacionNombreTxt.getText());
-                        federacionModificar.setNumeroAsociacion(Integer.parseInt(vistaGestion.federacionNumeroAsociacionTxt.getText()));
-                        federacionModificar.setArteMarcial(vistaGestion.federacionArteMarcialTxt.getText());
-                        federacionModificar.setFechaFundacion(Date.valueOf(vistaGestion.federacionAñoFundacionTxt.getDate()));
-                        modelo.modificarFederacion(federacionModificar);
-                        listarFederaciones(modelo.getFederaciones());
-                        comboLigaFederacion();
-                        vaciarCamposFederacion();
-                    }
+                        if (validarCamposFederacion()) {
+                            Federacion federacionModificar = (Federacion) vistaGestion.federacionLista.getSelectedValue();
+                            federacionModificar.setNombre(vistaGestion.federacionNombreTxt.getText());
+                            federacionModificar.setNumeroAsociacion(Integer.parseInt(vistaGestion.federacionNumeroAsociacionTxt.getText()));
+                            federacionModificar.setArteMarcial(vistaGestion.federacionArteMarcialTxt.getText());
+                            federacionModificar.setFechaFundacion(Date.valueOf(vistaGestion.federacionAñoFundacionTxt.getDate()));
+                            modelo.modificarFederacion(federacionModificar);
+                            listarFederaciones(modelo.getFederaciones());
+                            comboLigaFederacion();
+                            vaciarCamposFederacion();
+                        }
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(vistaGestion, "No se puede modificar la federación porque no existe o no esta seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 break;
             case "enviar":
-                Peleador peleadorEnviar = new Peleador();
+                if (JOptionPane.showConfirmDialog(vistaGestion, "¿Estás seguro de que quieres añadir este peleador?", "Confirmar acción", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    if (validarCamposCorreoPeleador()) {
 
-                peleadorEnviar.setNombre(vistaGimnasio.solicitudNombreTxt.getText());
-                peleadorEnviar.setApellido(vistaGimnasio.solicitudApellidoTxt.getText());
-                peleadorEnviar.setDni(vistaGimnasio.solicitudDniTxt.getText());
-                peleadorEnviar.setPeso(Integer.parseInt(vistaGimnasio.solicitudPesoTxt.getText()));
-                peleadorEnviar.setVictorias(Integer.parseInt(vistaGimnasio.solicitudVictoriasTxt.getText()));
-                peleadorEnviar.setApodo(vistaGimnasio.solicitudApodoTxt.getText());
-                peleadorEnviar.setFechaNacimiento(Date.valueOf(vistaGimnasio.solicitudNacimientoTxt.getDate()));
-                peleadorEnviar.setGimnasio((Gimnasio) vistaGimnasio.solicitudGimnasioCombo.getSelectedItem());
-                peleadorEnviar.setEntrenador((Entrenador) vistaGimnasio.solicitudEntrenadorCombo.getSelectedItem());
-                peleadorEnviar.setLiga((Liga) vistaGimnasio.solicitudLigaCombo.getSelectedItem());
+                        Peleador peleadorEnviar = new Peleador();
+
+                        peleadorEnviar.setNombre(vistaGimnasio.solicitudNombreTxt.getText());
+                        peleadorEnviar.setApellido(vistaGimnasio.solicitudApellidoTxt.getText());
+                        peleadorEnviar.setDni(vistaGimnasio.solicitudDniTxt.getText());
+                        peleadorEnviar.setPeso(Integer.parseInt(vistaGimnasio.solicitudPesoTxt.getText()));
+                        peleadorEnviar.setVictorias(Integer.parseInt(vistaGimnasio.solicitudVictoriasTxt.getText()));
+                        peleadorEnviar.setApodo(vistaGimnasio.solicitudApodoTxt.getText());
+                        peleadorEnviar.setFechaNacimiento(Date.valueOf(vistaGimnasio.solicitudNacimientoTxt.getDate()));
+                        peleadorEnviar.setGimnasio((Gimnasio) vistaGimnasio.solicitudGimnasioCombo.getSelectedItem());
+                        peleadorEnviar.setEntrenador((Entrenador) vistaGimnasio.solicitudEntrenadorCombo.getSelectedItem());
+                        peleadorEnviar.setLiga((Liga) vistaGimnasio.solicitudLigaCombo.getSelectedItem());
 
 
-                modelo.enviarCorreo(peleadorEnviar, vistaGimnasio.solicitudAsuntoTxt.getText());
+                        modelo.enviarCorreo(peleadorEnviar, vistaGimnasio.solicitudAsuntoTxt.getText());
+                    }
+                }
+                vaciarCamposCorreoPeleador();
+
                 break;
             case "inicio":
                 vistaGestion.setVisible(false);
@@ -489,12 +494,12 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
                 break;
             case "volver":
-               volverPost();
+                volverPost();
 
 
                 break;
             case "siguiente":
-               siguientePost();
+                siguientePost();
                 break;
             case "informes peleadores":
 
@@ -532,7 +537,7 @@ public class Controlador implements ActionListener, ListSelectionListener {
                 JasperViewer viewer7 = new JasperViewer(reporteLleno7,false);
                 viewer7.setVisible(true);
                 viewer7.setDefaultCloseOperation(JasperViewer.DISPOSE_ON_CLOSE);
-            break;
+                break;
             case "salir":
                 System.exit(0);
                 break;
@@ -630,13 +635,14 @@ public class Controlador implements ActionListener, ListSelectionListener {
         vistaGestion.postMensajeTxt.setText("");
         vistaGestion.postImagenSeleccionada = null;
     }
+
     /**
      * Método para validar los campos del formulario de peleador.
      *
      * @return true si los campos son válidos, false en caso contrario.
      */
     private boolean validarCamposPeleador() {
-        // Validar campos vacíos
+
         if (vistaGestion.peleadorNombreTxt.getText().isEmpty() ||
                 vistaGestion.peleadorApellidoTxt.getText().isEmpty() ||
                 vistaGestion.peleadorDniTxt.getText().isEmpty() ||
@@ -698,6 +704,23 @@ public class Controlador implements ActionListener, ListSelectionListener {
 
         return true;
     }
+    /**
+     * Método para vaciar los campos del formulario de envío de correo de peleador.
+     */
+    private void vaciarCamposCorreoPeleador() {
+        vistaGimnasio.solicitudNombreTxt.setText("");
+        vistaGimnasio.solicitudApellidoTxt.setText("");
+        vistaGimnasio.solicitudDniTxt.setText("");
+        vistaGimnasio.solicitudPesoTxt.setText("");
+        vistaGimnasio.solicitudVictoriasTxt.setText("");
+        vistaGimnasio.solicitudApodoTxt.setText("");
+        vistaGimnasio.solicitudNacimientoTxt.setDate(null);
+        vistaGimnasio.solicitudGimnasioCombo.setSelectedItem(null);
+        vistaGimnasio.solicitudEntrenadorCombo.setSelectedItem(null);
+        vistaGimnasio.solicitudLigaCombo.setSelectedItem(null);
+        vistaGimnasio.solicitudAsuntoTxt.setText("");
+    }
+
     /**
      * Método para validar los campos del formulario de gimnasio.
      *
@@ -852,56 +875,56 @@ public class Controlador implements ActionListener, ListSelectionListener {
      * @return true si los campos son válidos, false en caso contrario.
      */
 
-private boolean validarCamposGimnasio() {
-    // Validar campos vacíos
-    if (vistaGestion.gimnasioNombreTxt.getText().isEmpty() ||
-        vistaGestion.gimnasioDireccionTxt.getText().isEmpty() ||
-        vistaGestion.gimnasioCiudadTxt.getText().isEmpty() ||
-        vistaGestion.gimnasioContraseñaTxt.getText().isEmpty() ||
-        vistaGestion.gimnasioNifTxt.getText().isEmpty() ||
-        vistaGestion.gimnasioWebTxt.getText().isEmpty()) {
-        JOptionPane.showMessageDialog(vistaGestion, "Todos los campos del gimnasio son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
-        return false;
-    }
+    private boolean validarCamposGimnasio() {
+        // Validar campos vacíos
+        if (vistaGestion.gimnasioNombreTxt.getText().isEmpty() ||
+                vistaGestion.gimnasioDireccionTxt.getText().isEmpty() ||
+                vistaGestion.gimnasioCiudadTxt.getText().isEmpty() ||
+                vistaGestion.gimnasioContraseñaTxt.getText().isEmpty() ||
+                vistaGestion.gimnasioNifTxt.getText().isEmpty() ||
+                vistaGestion.gimnasioWebTxt.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(vistaGestion, "Todos los campos del gimnasio son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
 
-    // Validar longitud de nombre
-    if (vistaGestion.gimnasioNombreTxt.getText().length() > 50) {
-        JOptionPane.showMessageDialog(vistaGestion, "El nombre no puede exceder 50 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
-        return false;
-    }
+        // Validar longitud de nombre
+        if (vistaGestion.gimnasioNombreTxt.getText().length() > 50) {
+            JOptionPane.showMessageDialog(vistaGestion, "El nombre no puede exceder 50 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
 
-    // Validar longitud de dirección
-    if (vistaGestion.gimnasioDireccionTxt.getText().length() > 100) {
-        JOptionPane.showMessageDialog(vistaGestion, "La dirección no puede exceder 100 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
-        return false;
-    }
+        // Validar longitud de dirección
+        if (vistaGestion.gimnasioDireccionTxt.getText().length() > 100) {
+            JOptionPane.showMessageDialog(vistaGestion, "La dirección no puede exceder 100 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
 
-    // Validar longitud de ciudad
-    if (vistaGestion.gimnasioCiudadTxt.getText().length() > 50) {
-        JOptionPane.showMessageDialog(vistaGestion, "La ciudad no puede exceder 50 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
-        return false;
-    }
+        // Validar longitud de ciudad
+        if (vistaGestion.gimnasioCiudadTxt.getText().length() > 50) {
+            JOptionPane.showMessageDialog(vistaGestion, "La ciudad no puede exceder 50 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
 
-    // Validar longitud de NIF
-    if (vistaGestion.gimnasioNifTxt.getText().length() > 15) {
-        JOptionPane.showMessageDialog(vistaGestion, "El NIF no puede exceder 15 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
-        return false;
-    }
+        // Validar longitud de NIF
+        if (vistaGestion.gimnasioNifTxt.getText().length() > 15) {
+            JOptionPane.showMessageDialog(vistaGestion, "El NIF no puede exceder 15 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
 
-    // Validar longitud de web
-    if (vistaGestion.gimnasioWebTxt.getText().length() > 100) {
-        JOptionPane.showMessageDialog(vistaGestion, "La URL de la web no puede exceder 100 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
-        return false;
-    }
+        // Validar longitud de web
+        if (vistaGestion.gimnasioWebTxt.getText().length() > 100) {
+            JOptionPane.showMessageDialog(vistaGestion, "La URL de la web no puede exceder 100 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
 
-    // Validar longitud mínima de contraseña
-    if (vistaGestion.gimnasioContraseñaTxt.getText().length() < 4 || vistaGestion.gimnasioContraseñaTxt.getText().length() > 20){
-        JOptionPane.showMessageDialog(vistaGestion, "La contraseña debe tener al menos 8 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
-        return false;
-    }
+        // Validar longitud mínima de contraseña
+        if (vistaGestion.gimnasioContraseñaTxt.getText().length() < 4 || vistaGestion.gimnasioContraseñaTxt.getText().length() > 20) {
+            JOptionPane.showMessageDialog(vistaGestion, "La contraseña debe tener al menos 4 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
 
-    return true;
-}
+        return true;
+    }
     /**
      * Método para validar los campos del formulario de post.
      *
@@ -913,6 +936,90 @@ private boolean validarCamposGimnasio() {
             JOptionPane.showMessageDialog(vistaGestion, "El título y el mensaje del post son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        return true;
+    }
+    /**
+     * Método para validar los campos del formulario de envío de correo de peleador.
+     *
+     * @return true si los campos son válidos, false en caso contrario.
+     */
+    private boolean validarCamposCorreoPeleador() {
+        // Validar campos vacíos
+        if (vistaGimnasio.solicitudNombreTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudApellidoTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudDniTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudPesoTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudVictoriasTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudApodoTxt.getText().isEmpty() ||
+                vistaGimnasio.solicitudNacimientoTxt.getDate() == null ||
+                vistaGimnasio.solicitudGimnasioCombo.getSelectedItem() == null ||
+                vistaGimnasio.solicitudEntrenadorCombo.getSelectedItem() == null ||
+                vistaGimnasio.solicitudLigaCombo.getSelectedItem() == null ||
+                vistaGimnasio.solicitudAsuntoTxt.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "Todos los campos son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar longitud de nombre
+        if (vistaGimnasio.solicitudNombreTxt.getText().length() > 50) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El nombre no puede exceder 50 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar longitud de apellido
+        if (vistaGimnasio.solicitudApellidoTxt.getText().length() > 50) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El apellido no puede exceder 50 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar longitud de apodo
+        if (vistaGimnasio.solicitudApodoTxt.getText().length() > 30) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El apodo no puede exceder 30 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar longitud de DNI
+        if (vistaGimnasio.solicitudDniTxt.getText().length() > 15) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El DNI no puede exceder 15 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar peso
+        try {
+            int peso = Integer.parseInt(vistaGimnasio.solicitudPesoTxt.getText());
+            if (peso <= 0) {
+                JOptionPane.showMessageDialog(vistaGimnasio, "El peso debe ser mayor a 0.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El peso debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar victorias
+        try {
+            int victorias = Integer.parseInt(vistaGimnasio.solicitudVictoriasTxt.getText());
+            if (victorias < 0) {
+                JOptionPane.showMessageDialog(vistaGimnasio, "El número de victorias no puede ser negativo.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El número de victorias debe ser un valor numérico.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar fecha de nacimiento
+        if (LocalDate.parse(vistaGimnasio.solicitudNacimientoTxt.getDate().toString()).isAfter(LocalDate.now())) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "La fecha de nacimiento no puede ser futura.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Validar longitud de asunto
+        if (vistaGimnasio.solicitudAsuntoTxt.getText().length() > 100) {
+            JOptionPane.showMessageDialog(vistaGimnasio, "El asunto no puede exceder 100 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         return true;
     }
     /**
@@ -1062,7 +1169,7 @@ private boolean validarCamposGimnasio() {
         comboGimnasioLiga();
         comboInformesLiga();
         comboInformesGimnasio();
-        
+
     }
     /**
      * Método para actualizar el combo gimnasio del peleador en la vista de gestión.
@@ -1283,7 +1390,7 @@ private boolean validarCamposGimnasio() {
      *
      * @param entrenadores la lista de entrenadores a mostrar.
      */
-private void listarEntrenadores(ArrayList<Entrenador> entrenadores){
+    private void listarEntrenadores(ArrayList<Entrenador> entrenadores){
         vistaGestion.dflmentrenador.clear();
         for (Entrenador entrenador:entrenadores){
             vistaGestion.dflmentrenador.addElement(entrenador);
@@ -1294,7 +1401,7 @@ private void listarEntrenadores(ArrayList<Entrenador> entrenadores){
      *
      * @param ligas la lista de ligas a mostrar.
      */
-private void listarLigas(ArrayList<Liga> ligas){
+    private void listarLigas(ArrayList<Liga> ligas){
         vistaGestion.dflmliga.clear();
         for (Liga liga:ligas){
             vistaGestion.dflmliga.addElement(liga);
@@ -1305,7 +1412,7 @@ private void listarLigas(ArrayList<Liga> ligas){
      *
      * @param federaciones la lista de federaciones a mostrar.
      */
-private void listarFederaciones(ArrayList<Federacion> federaciones){
+    private void listarFederaciones(ArrayList<Federacion> federaciones){
         vistaGestion.dflmfederacion.clear();
         for (Federacion federacion:federaciones){
             vistaGestion.dflmfederacion.addElement(federacion);
@@ -1316,34 +1423,34 @@ private void listarFederaciones(ArrayList<Federacion> federaciones){
      *
      * @param posts la lista de posts a mostrar.
      */
-private void listarPosts(ArrayList<Post> posts) {
-    vistaGestion.dflmpost.clear();
-    for (Post post : posts) {
-        vistaGestion.dflmpost.addElement(post);
+    private void listarPosts(ArrayList<Post> posts) {
+        vistaGestion.dflmpost.clear();
+        for (Post post : posts) {
+            vistaGestion.dflmpost.addElement(post);
+        }
     }
-}
  /*
  Metodo para inicializar el post en la vista de post.
   */
 
-private void inicializarPost(ArrayList<Post> posts){
+    private void inicializarPost(ArrayList<Post> posts){
         try {
 
 
-        vistaPost.postTituloTxt.setText(posts.get(0).getTitulo());
-        vistaPost.postMensajeTxt.setText(posts.get(0).getMensaje());
-        if (posts.get(0).getFoto() != null) {
-            vistaPost.postImagenTxt.setIcon(new ImageIcon(posts.get(0).getFoto()));
-        } else {
-            vistaPost.postImagenTxt.setIcon(null);
-        }
+            vistaPost.postTituloTxt.setText(posts.get(0).getTitulo());
+            vistaPost.postMensajeTxt.setText(posts.get(0).getMensaje());
+            if (posts.get(0).getFoto() != null) {
+                vistaPost.postImagenTxt.setIcon(new ImageIcon(posts.get(0).getFoto()));
+            } else {
+                vistaPost.postImagenTxt.setIcon(null);
+            }
         } catch (IndexOutOfBoundsException e) {
             vistaPost.postTituloTxt.setText("");
             vistaPost.postMensajeTxt.setText("");
             vistaPost.postImagenTxt.setIcon(null);
         }
 
-}
+    }
     /**
      * Método para mostrar el siguiente post en la vista de post.
      *
